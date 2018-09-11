@@ -1,5 +1,6 @@
 [all:children]
 asa
+deepsecurity
 inode
 linux
 panos
@@ -8,6 +9,9 @@ windows
 
 [asa]
 fw01-asa
+
+[deepsecurity]
+av01-deepsecurity
 
 [inode]
 tower01-inode

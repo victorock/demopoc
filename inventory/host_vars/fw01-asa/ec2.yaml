@@ -1,0 +1,7 @@
+ec2_instance_interface:
+  mgmt:
+    private_ip_address: "10.1.0.253"
+  outside:
+    private_ip_address: "10.1.1.253"
+  inside:
+    private_ip_address: "10.1.2.253"

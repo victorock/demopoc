@@ -10,6 +10,7 @@
     region: "{{ ec2_region }}"
     vpc_id: "{{ ec2_vpc_net.vpc.id }}"
     cidr: "{{ ec2_vpc_subnet_mgmt }}"
+    map_public: true
     resource_tags:
       Environment: "{{ ec2_vpc_name }}"
       Name: "mgmt"
@@ -20,6 +21,7 @@
     region: "{{ ec2_region }}"
     vpc_id: "{{ ec2_vpc_net.vpc.id }}"
     cidr: "{{ ec2_vpc_subnet_outside }}"
+    map_public: true
     resource_tags:
       Environment: "{{ ec2_vpc_name }}"
       Name: "outside"
