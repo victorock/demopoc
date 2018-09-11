@@ -1,0 +1,9 @@
+ec2_instance: "appliance"
+ec2_instance_type: "t2.medium"
+ec2_instance_image: "ami-c86c3f23"
+ec2_group: "{{ ec2_vpc_name }}"
+ec2_group_rules:
+  - proto: -1
+    from_port: -1
+    to_port: -1
+    cidr_ip: 0.0.0.0/0

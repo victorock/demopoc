@@ -1,0 +1,6 @@
+- name: "Provision Windows"
+  hosts: windows
+  connection: local
+  gather_facts: no
+  roles:
+    - provision

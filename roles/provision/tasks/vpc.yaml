@@ -1,0 +1,95 @@
+- name: "Create vpc"
+  ec2_vpc_net:
+    name: "{{ ec2_vpc_name }}"
+    cidr_block: "{{ ec2_vpc_cidr }}"
+    region: "{{ ec2_region }}"
+  register: ec2_vpc_net
+
+- name: "Create MGMT subnet"
+  ec2_vpc_subnet:
+    region: "{{ ec2_region }}"
+    vpc_id: "{{ ec2_vpc_net.vpc.id }}"
+    cidr: "{{ ec2_vpc_subnet_mgmt }}"
+    resource_tags:
+      Environment: "{{ ec2_vpc_name }}"
+      Name: "mgmt"
+  register: ec2_vpc_subnet_mgmt
+
+- name: "Create Outside subnet"
+  ec2_vpc_subnet:
+    region: "{{ ec2_region }}"
+    vpc_id: "{{ ec2_vpc_net.vpc.id }}"
+    cidr: "{{ ec2_vpc_subnet_outside }}"
+    resource_tags:
+      Environment: "{{ ec2_vpc_name }}"
+      Name: "outside"
+  register: ec2_vpc_subnet_outside
+
+- name: "Create Inside subnet"
+  ec2_vpc_subnet:
+    region: "{{ ec2_region }}"
+    vpc_id: "{{ ec2_vpc_net.vpc.id }}"
+    cidr: "{{ ec2_vpc_subnet_inside }}"
+    resource_tags:
+      Environment: "{{ ec2_vpc_name }}"
+      Name: "inside"
+  register: ec2_vpc_subnet_inside
+
+- name: "Associate an internet gateway to the vpc"
+  ec2_vpc_igw:
+    region: "{{ ec2_region }}"
+    vpc_id: "{{ ec2_vpc_net.vpc.id }}"
+  register: ec2_vpc_igw
+
+- name: "Create route table for zone mgmt"
+  ec2_vpc_route_table:
+    region: "{{ ec2_region }}"
+    vpc_id: "{{ ec2_vpc_net.vpc.id }}"
+    subnets:
+      - "{{ ec2_vpc_subnet_mgmt.subnet.cidr_block }}"
+    routes:
+      - dest: 0.0.0.0/0
+        gateway_id: "{{ ec2_vpc_igw.gateway_id }}"
+    tags:
+      Environment: "{{ ec2_vpc_name }}"
+      Zone: "mgmt"
+  register: ec2_vpc_route_table_mgmt
+
+- name: "Create route table for zone outside"
+  ec2_vpc_route_table:
+    region: "{{ ec2_region }}"
+    vpc_id: "{{ ec2_vpc_net.vpc.id }}"
+    subnets:
+      - "{{ ec2_vpc_subnet_outside.subnet.cidr_block }}"
+    routes:
+      - dest: 0.0.0.0/0
+        gateway_id: "{{ ec2_vpc_igw.gateway_id }}"
+    tags:
+      Environment: "{{ ec2_vpc_name }}"
+      Zone: "outside"
+  register: ec2_vpc_route_table_outside
+
+- name: "Create route table for zone inside"
+  ec2_vpc_route_table:
+    region: "{{ ec2_region }}"
+    vpc_id: "{{ ec2_vpc_net.vpc.id }}"
+    subnets:
+      - "{{ ec2_vpc_subnet_inside.subnet.cidr_block }}"
+    tags:
+      Environment: "{{ ec2_vpc_name }}"
+      Zone: "inside"
+  register: ec2_vpc_route_table_inside
+
+- name: "Ensure presence of keypair"
+  ec2_key:
+    name: "{{ ec2_vpc_name }}"
+    key_material: "{{ lookup('file', 'keychain/' + ec2_vpc_name + '.pub') }}"
+
+- name: "Ensure security group"
+  ec2_group:
+    name: "{{ ec2_group }}"
+    description: "{{ ec2_group }}"
+    vpc_id: "{{ ec2_vpc_net.vpc.id }}"
+    region: "{{ ec2_region }}"
+    rules: "{{ ec2_group_rules }}"
+  register: ec2_group

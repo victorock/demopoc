@@ -1,0 +1,42 @@
+- name: "Create eni for mgmt"
+  ec2_eni:
+    region: "{{ ec2_region }}"
+    device_index: 0
+    subnet_id: "{{ ec2_vpc_subnet_mgmt.subnet.id }}"
+    security_groups: "{{ ec2_group.group_id }}"
+    delete_on_termination: true
+  register: ec2_eni_mgmt
+
+- name: "Associate EIP to mgmt ENI"
+  ec2_eip:
+    region: "{{ ec2_region }}"
+    device_id: "{{ ec2_eni_mgmt.interface.id }}"
+    in_vpc: true
+    release_on_disassociation: true
+    reuse_existing_ip_allowed: true
+  register: ec2_eip_mgmt
+
+- name: "Create eni for inside"
+  ec2_eni:
+    region: "{{ ec2_region }}"
+    device_index: 1
+    subnet_id: "{{ ec2_vpc_subnet_inside.subnet.id }}"
+    security_groups: "{{ ec2_group.group_id }}"
+    delete_on_termination: true
+  register: ec2_eni_inside
+
+- name: "Create Instance"
+  ec2:
+    region: "{{ ec2_region }}"
+    instance_type: "{{ ec2_instance_type }}"
+    image: "{{ ec2_instance_image }}"
+    key_name: "{{ ec2_instance_key }}"
+    wait: true
+    network_interfaces:
+      - "{{ ec2_eni_mgmt.interface.id }}"
+      - "{{ ec2_eni_inside.interface.id }}"
+    instance_tags:
+      Name: "{{ ec2_instance_name }}"
+      Environment: "{{ ec2_vpc_name }}"
+      Platform: "host"
+  register: ec2_instance
