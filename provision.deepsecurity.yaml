@@ -1,6 +1,0 @@
-- name: "Provision Trendmicro Deep Security"
-  hosts: deepsecurity
-  connection: local
-  gather_facts: no
-  roles:
-    - provision

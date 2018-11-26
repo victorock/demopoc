@@ -1,9 +1,0 @@
-ec2_instance: "appliance"
-ec2_instance_type: "m4.xlarge"
-ec2_instance_image: "ami-d6e2e43d"
-ec2_group: "{{ ec2_vpc_name }}"
-ec2_group_rules:
-  - proto: -1
-    from_port: -1
-    to_port: -1
-    cidr_ip: 0.0.0.0/0

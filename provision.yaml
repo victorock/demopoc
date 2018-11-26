@@ -1,5 +1,4 @@
 - include: provision.asa.yaml
-- include: provision.deepsecurity.yaml
 - include: provision.inode.yaml
 - include: provision.linux.yaml
 - include: provision.panos.yaml
