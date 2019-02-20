@@ -2,6 +2,7 @@ Provision disposable topology with network devices from AWS marketplace.
 
 Topology:
 
+`
                                 +--------+    +----------+   +---------+    +-----------+
                                 |fw01-asa|    |fw01-panos|   |lb01-tmos|    |ipam01-nios|
                                 |        |    |          |   |         |    |           |
@@ -29,6 +30,7 @@ Topology:
   |  Red Hat  |   |  Microsoft  |
   |           |   |             |
   +-----------+   +-------------+
+`
 
 ## Folder structure
 
