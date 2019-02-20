@@ -1,6 +1,9 @@
 ec2_instance_role: "appliance"
-ec2_instance_type: "c4.large"
-ec2_instance_image: "ami-12f0d2f9"
+ec2_instance_type: "t2.large"
+ec2_ami:
+  name: 'F5 Networks Prelicensed Hourly BIGIP-13.1*Good 25MBPS*'
+  owners: 679593333241
+  architecture: x86_64
 ec2_group: "{{ ec2_vpc_name }}"
 ec2_group_rules:
   - proto: -1

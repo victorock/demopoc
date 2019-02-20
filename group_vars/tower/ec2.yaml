@@ -1,6 +1,9 @@
 ec2_instance_role: "host"
 ec2_instance_type: "t2.medium"
-ec2_instance_image: "ami-c86c3f23"
+ec2_ami:
+  name: 'RHEL-7.5*GA*'
+  architecture: x86_64
+  owners: 309956199498
 ec2_group: "{{ ec2_vpc_name }}"
 ec2_group_rules:
   - proto: -1

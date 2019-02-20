@@ -1,6 +1,9 @@
 ec2_instance_role: "appliance"
 ec2_instance_type: "m4.xlarge"
-ec2_instance_image: "ami-1bbdd574"
+ec2_ami:
+  name: "PA-VM-AWS-*"
+  owners: "679593333241"
+  architecture: "x86_64"
 ec2_group: "{{ ec2_vpc_name }}"
 ec2_group_rules:
   - proto: -1

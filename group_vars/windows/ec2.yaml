@@ -1,0 +1,12 @@
+ec2_instance_role: "host"
+ec2_instance_type: "t2.large"
+ec2_ami:
+  name: "Windows_Server-2016-English-Full-ECS_Optimized*"
+  architecture: "x86_64"
+  owners: "591542846629"
+ec2_group: "{{ ec2_vpc_name }}"
+ec2_group_rules:
+  - proto: -1
+    from_port: -1
+    to_port: -1
+    cidr_ip: 0.0.0.0/0

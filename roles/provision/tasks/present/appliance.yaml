@@ -46,11 +46,22 @@
     delete_on_termination: true
   register: ec2_eni_inside
 
+- name: "Find ami in marketplace"
+  ec2_ami_facts:
+    region: "{{ ec2_region }}"
+    owners: "{{ ec2_ami.owners }}"
+    filters:
+      name: "{{ ec2_ami.name }}"
+      architecture: "{{ ec2_ami.architecture }}"
+  register: ec2_ami_facts
+
 - name: "Create Instance"
+  vars:
+    ec2_ami_image: "{{ ec2_ami_facts.images | selectattr('name', 'defined') | sort(attribute='creation_date') | last }}"
   ec2_instance:
     region: "{{ ec2_region }}"
     instance_type: "{{ ec2_instance_type }}"
-    image_id: "{{ ec2_instance_image }}"
+    image_id: "{{ ec2_ami_image.image_id }}"
     key_name: "{{ ec2_instance_key }}"
     network:
       interfaces:

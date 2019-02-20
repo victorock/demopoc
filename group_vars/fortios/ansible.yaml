@@ -1,0 +1,8 @@
+---
+ansible_network_os: "fortios"
+ansible_network_provider: "victorock.fortinet_fortios"
+provider:
+  host: "{{ ansible_host }}"
+  username: "{{ ansible_user }}"
+  password: "{{ ansible_password }}"
+  use_ssl: no

@@ -1,6 +1,9 @@
 ec2_instance_role: "appliance"
-ec2_instance_type: "t2.medium"
-ec2_instance_image: "ami-093af6635b9bde5fe"
+ec2_instance_type: "c4.large"
+ec2_ami:
+  name: "nios-*CP-V800*"
+  owners: "679593333241"
+  architecture: "x86_64"
 ec2_group: "{{ ec2_vpc_name }}"
 ec2_group_rules:
   - proto: -1

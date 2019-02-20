@@ -1,16 +1,17 @@
 [all:children]
 asa
-inode
+tower
 linux
 panos
 tmos
 nios
+fortios
 windows
 
 [asa]
 fw01-asa
 
-[inode]
+[tower]
 tower01-inode
 
 [linux]
@@ -18,6 +19,9 @@ lin01-rhel7
 
 [panos]
 fw01-panos
+
+[fortios]
+fw01-fortios
 
 [tmos]
 lb01-tmos
