@@ -1,5 +1,6 @@
 - name: "Create vpc"
   run_once: true
+  delegate_to: localhost
   ec2_vpc_net:
     name: "{{ ec2_vpc_name }}"
     cidr_block: "{{ ec2_vpc_cidr }}"
@@ -8,6 +9,7 @@
 
 - name: "Create MGMT subnet"
   run_once: true
+  delegate_to: localhost
   ec2_vpc_subnet:
     region: "{{ ec2_region }}"
     vpc_id: "{{ ec2_vpc_net.vpc.id }}"
@@ -20,6 +22,7 @@
 
 - name: "Create Outside subnet"
   run_once: true
+  delegate_to: localhost
   ec2_vpc_subnet:
     region: "{{ ec2_region }}"
     vpc_id: "{{ ec2_vpc_net.vpc.id }}"
@@ -32,6 +35,7 @@
 
 - name: "Create Inside subnet"
   run_once: true
+  delegate_to: localhost
   ec2_vpc_subnet:
     region: "{{ ec2_region }}"
     vpc_id: "{{ ec2_vpc_net.vpc.id }}"
@@ -43,6 +47,7 @@
 
 - name: "Associate an internet gateway to the vpc"
   run_once: true
+  delegate_to: localhost
   ec2_vpc_igw:
     region: "{{ ec2_region }}"
     vpc_id: "{{ ec2_vpc_net.vpc.id }}"
@@ -50,6 +55,7 @@
 
 - name: "Create route table for zone mgmt"
   run_once: true
+  delegate_to: localhost
   ec2_vpc_route_table:
     region: "{{ ec2_region }}"
     vpc_id: "{{ ec2_vpc_net.vpc.id }}"
@@ -65,6 +71,7 @@
 
 - name: "Create route table for zone outside"
   run_once: true
+  delegate_to: localhost
   ec2_vpc_route_table:
     region: "{{ ec2_region }}"
     vpc_id: "{{ ec2_vpc_net.vpc.id }}"
@@ -80,6 +87,7 @@
 
 - name: "Create route table for zone inside"
   run_once: true
+  delegate_to: localhost
   ec2_vpc_route_table:
     region: "{{ ec2_region }}"
     vpc_id: "{{ ec2_vpc_net.vpc.id }}"
@@ -92,6 +100,7 @@
 
 - name: "Ensure presence of keypair"
   run_once: true
+  delegate_to: localhost
   ec2_key:
     region: "{{ ec2_region }}"
     name: "{{ ec2_vpc_name }}"
@@ -99,6 +108,7 @@
 
 - name: "Ensure security group"
   run_once: true
+  delegate_to: localhost
   ec2_group:
     region: "{{ ec2_region }}"
     name: "{{ ec2_group }}"

@@ -34,57 +34,56 @@ Topology:
 
 ## Folder structure
 
-
+```
 ├── inventory  
-│   ├── group_vars <- Groups corresponding to the different appliances.  
-│   │   ├── all <- Variables that applies to all appliances.  
+│   ├── group_vars <- Groups corresponding to the different Operating Systems.  
+│   │   ├── all <- Variables that applies to all Operating Systems.  
 │   │   │   └── ec2.yaml <- Global EC2 configurations.  
-│   │   ├── asa <- Variables that applies to asa appliances.  
-│   │   │   ├── ansible.yaml  
-│   │   │   └── ec2.yaml <- Appliance's EC2 Configurations: `ec2_image`, 
-`ec2_instance_type`, `ec2_instance_role`.  
-│   │   ├── inode <- Variables that applies to Isolated NODE appliances  
-│   │   │   ├── ansible.yaml  
-│   │   │   └── ec2.yaml <- Appliance's EC2 Configurations: `ec2_image`, `ec2_instance_type`, `ec2_instance_role`.  
-│   │   ├── linux <- Variables that applies to linux hosts  
-│   │   │   ├── ansible.yaml  
-│   │   │   └── ec2.yaml <- Appliance's EC2 Configurations: `ec2_image`, `ec2_instance_type`, `ec2_instance_role`.  
-│   │   ├── nios <- Variables that applies to nios appliances  
-│   │   │   ├── ansible.yaml  
-│   │   │   └── ec2.yaml <- Appliance's EC2 Configurations: `ec2_image`, `ec2_instance_type`, `ec2_instance_role`.  
-│   │   ├── panos <- Variables that applies to panos appliances  
-│   │   │   ├── ansible.yaml  
-│   │   │   └── ec2.yaml <- Appliance's EC2 Configurations: `ec2_image`, `ec2_instance_type`, `ec2_instance_role`.  
-│   │   ├── tmos <- Variables that applies to tmos appliances  
-│   │   │   ├── ansible.yaml  
-│   │   │   └── ec2.yaml <- Appliance's EC2 Configurations: `ec2_image`, `ec2_instance_type`, `ec2_instance_role`.  
-│   │   └── windows <- Variables that applies to windows hosts  
-│   │       ├── ansible.yaml  
-│   │       └── ec2.yaml <- Appliance's EC2 Configurations: `ec2_image`, `ec2_instance_type`, `ec2_instance_role`.  
+│   │   ├── asa <- Variables specific to this Operating System.  
+│   │   │   ├── ansible.yaml <- Operating System's Ansible Configurations.  
+│   │   │   └── ec2.yaml <- Operating System's EC2 Configurations.  
+│   │   ├── inode <- Variables specific to this Operating System.  
+│   │   │   ├── ansible.yaml <- Operating System's Ansible Configurations.  
+│   │   │   └── ec2.yaml <- Operating System's EC2 Configurations.  
+│   │   ├── linux <- Variables specific to this Operating System.  
+│   │   │   ├── ansible.yaml <- Operating System's Ansible Configurations.  
+│   │   │   └── ec2.yaml <- Operating System's EC2 Configurations.  
+│   │   ├── nios <- Variables specific to this Operating System.  
+│   │   │   ├── ansible.yaml <- Operating System's Ansible Configurations.  
+│   │   │   └── ec2.yaml <- Operating System's EC2 Configurations.  
+│   │   ├── panos <- Variables specific to this Operating System.  
+│   │   │   ├── ansible.yaml <- Operating System's Ansible Configurations.  
+│   │   │   └── ec2.yaml <- Operating System's EC2 Configurations.  
+│   │   ├── tmos <- Variables specific to this Operating System.  
+│   │   │   ├── ansible.yaml <- Operating System's Ansible Configurations.  
+│   │   │   └── ec2.yaml <- Operating System's EC2 Configurations.  
+│   │   └── windows <- Variables specific to this Operating System.  
+│   │       ├── ansible.yaml <- Operating System's Ansible Configurations.  
+│   │       └── ec2.yaml <- Vendor EC2 Configurations.  
 │   ├── host_vars  
-│   │   ├── fw01-asa <- Variables that applies to this specific host.  
-│   │   │   └── ec2.yaml <- Node's Specific Specs: `ec2_instance_interface`  
-│   │   ├── fw01-panos <- Variables that applies to this specific host.  
-│   │   │   └── ec2.yaml <- Node's Specific Specs: `ec2_instance_interface`  
-│   │   ├── ipam01-nios <- Variables that applies to this specific host.  
-│   │   │   └── ec2.yaml <- Node's Specific Specs: `ec2_instance_interface`  
-│   │   ├── lb01-tmos <- Variables that applies to this specific host.  
-│   │   │   └── ec2.yaml <- Node's Specific Specs: `ec2_instance_interface`  
-│   │   ├── lin01-rhel7 <- Variables that applies to this specific host.  
-│   │   │   └── ec2.yaml <- Node's Specific Specs: `ec2_instance_interface`  
-│   │   ├── tower01-inode <- Variables that applies to this specific host.  
-│   │   │   └── ec2.yaml <- Node's Specific Specs: `ec2_instance_interface`  
-│   │   └── win01-win2016 <- Variables that applies to this specific host.  
-│   │       └── ec2.yaml <- Node's Specific Specs: `ec2_instance_interface`  
-│   └── hosts <- Inventory file specifying appliances and nodes member of each appliance group.  
+│   │   ├── fw01-asa <- Variables specific to this node.  
+│   │   │   └── ec2.yaml <- Node's Specific Specs.  
+│   │   ├── fw01-panos <- Variables specific to this node.  
+│   │   │   └── ec2.yaml <- Node's Specific Specs.  
+│   │   ├── ipam01-nios <- Variables specific to this node.  
+│   │   │   └── ec2.yaml <- Node's Specific Specs.  
+│   │   ├── lb01-tmos <- Variables specific to this node.  
+│   │   │   └── ec2.yaml <- Node's Specific Specs.  
+│   │   ├── lin01-rhel7 <- Variables specific to this node.  
+│   │   │   └── ec2.yaml <- Node's Specific Specs.  
+│   │   ├── tower01-inode <- Variables specific to this node.  
+│   │   │   └── ec2.yaml <- Node's Specific Specs.  
+│   │   └── win01-win2016 <- Variables specific to this node.  
+│   │       └── ec2.yaml <- Node's Specific Specs.  
+│   └── hosts <- Inventory file mapping vendor appliances and nodes.  
 ├── keychain <- Folder containing the ssh keys to deploy in EC2.  
-│   ├── demobox <- Private key to connect to the instances: `ssh-add demobox` to have it in ssh-agent.  
-│   └── demobox.pub <- Public key to install in EC2. The filename must be the same as the value of variable `{{ ec2_vpc_name }}.pub`.  
-├── provision.yaml <- Provision the environment. Provide the variable `demopoc` with the proper appliance or host (Default: all).  
-└── teardown.yaml <- Teardown the environment. Provide the variable `demopoc` with the proper appliance or host (Default: all).  
+│   ├── demobox <- Private key to connect to the instances.  
+│   └── demobox.pub <- Public key to install in EC2.  
+├── provision.yaml <- Playbook to provision the environment.  
+└── teardown.yaml <- Playbook to teardown the environment  
+```
 
-
-## Howto Use
+## Howto
 
 To provision the whole topology: `ansible-playbook provision.yaml`
 
