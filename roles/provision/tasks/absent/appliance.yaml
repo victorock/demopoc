@@ -5,7 +5,6 @@
     filters:
       "instance-type": "{{ ec2_instance_type }}"
       "key-name": "{{ ec2_instance_key }}"
-      "image-id": "{{ ec2_instance_image }}"
       "tag:Name": "{{ ec2_instance_name }}"
       "tag:Environment": "{{ ec2_vpc_name }}"
       "tag:Platform": "{{ ansible_network_os | default('appliance') }}"
@@ -34,11 +33,9 @@
 - name: "Terminate Instance"
   ec2_instance:
     region: "{{ ec2_region }}"
-    filters:
-      "instance-type": "{{ ec2_instance_type }}"
-      "key-name": "{{ ec2_instance_key }}"
-      "image-id": "{{ ec2_instance_image }}"
-      "tag:Name": "{{ ec2_instance_name }}"
-      "tag:Environment": "{{ ec2_vpc_name }}"
-      "tag:Platform": "{{ ansible_network_os | default('appliance') }}"
+    instance_ids: "{{ item.instance_id }}"
+    wait: true
     state: "terminated"
+  loop: "{{ ec2_instance_facts.instances }}"
+  loop_control:
+    label: "instance: {{ item.tags.Name }} ({{ item.instance_id }})"
