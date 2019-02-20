@@ -1,6 +1,0 @@
-- name: "Provision Cisco Asa"
-  hosts: asa
-  connection: local
-  gather_facts: no
-  roles:
-    - provision

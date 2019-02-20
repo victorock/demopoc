@@ -1,6 +1,6 @@
 ec2_instance_role: "appliance"
-ec2_instance_type: "m4.xlarge"
-ec2_instance_image: "ami-1bbdd574"
+ec2_instance_type: "c4.large"
+ec2_instance_image: "ami-2e465442"
 ec2_group: "{{ ec2_vpc_name }}"
 ec2_group_rules:
   - proto: -1

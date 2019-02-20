@@ -1,0 +1,12 @@
+---
+- name: "Terminate Instance"
+  ec2_instance:
+    region: "{{ ec2_region }}"
+    filters:
+      "instance-type": "{{ ec2_instance_type }}"
+      "key-name": "{{ ec2_instance_key }}"
+      "image-id": "{{ ec2_instance_image }}"
+      "tag:Name": "{{ ec2_instance_name }}"
+      "tag:Environment": "{{ ec2_vpc_name }}"
+      "tag:Platform": "{{ ansible_network_os | default('appliance') }}"
+    state: "terminated"

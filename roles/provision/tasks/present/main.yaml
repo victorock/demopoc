@@ -1,0 +1,5 @@
+- name: "Ensure vpc state as {{ provision_state }}"
+  include_tasks: "vpc.yaml"
+
+- name: "Ensure instante state as {{ provision_state }}"
+  include_tasks: "{{ ec2_instance_role }}.yaml"

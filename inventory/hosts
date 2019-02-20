@@ -4,6 +4,7 @@ inode
 linux
 panos
 tmos
+nios
 windows
 
 [asa]
@@ -20,6 +21,9 @@ fw01-panos
 
 [tmos]
 lb01-tmos
+
+[nios]
+ipam01-nios
 
 [windows]
 win01-win2016

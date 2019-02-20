@@ -1,6 +1,0 @@
-- name: "Provision Linux"
-  hosts: linux
-  connection: local
-  gather_facts: no
-  roles:
-    - provision

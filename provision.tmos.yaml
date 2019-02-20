@@ -1,6 +1,0 @@
-- name: "Provision F5 tmos"
-  hosts: tmos
-  connection: local
-  gather_facts: no
-  roles:
-    - provision

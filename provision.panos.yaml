@@ -1,6 +1,0 @@
-- name: "Provision Palo Alto panos"
-  hosts: panos
-  connection: local
-  gather_facts: no
-  roles:
-    - provision

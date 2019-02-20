@@ -1,8 +1,8 @@
 ---
-- name: "Provision"
+- name: "Teardown"
   hosts: "{{ demopoc | default('all') }}"
   connection: local
   gather_facts: no
   roles:
     - role: provision
-      provision_state: present
+      provision_state: absent

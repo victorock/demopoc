@@ -1,0 +1,110 @@
+---
+- name: "Gather VPC facts"
+  run_once: true
+  ec2_vpc_net_facts:
+    region: "{{ ec2_region }}"
+    filters:
+      "cidr": "{{ ec2_vpc_cidr }}"
+      "tag:Name": "{{ ec2_vpc_name }}"
+  register: ec2_vpc_net_facts
+
+- name: "Disassociate internet gateway to vpc"
+  run_once: true
+  ec2_vpc_igw:
+    region: "{{ ec2_region }}"
+    vpc_id: "{{ item.vpc_id }}"
+    state: "absent"
+  loop: "{{ ec2_vpc_net_facts.vpcs }}"
+  loop_control:
+    label: "vpc: {{ item.vpc_id }}"
+
+- name: "Destroy MGMT subnet"
+  run_once: true
+  ec2_vpc_subnet:
+    region: "{{ ec2_region }}"
+    vpc_id: "{{ item.vpc_id }}"
+    cidr: "{{ ec2_vpc_subnet_mgmt }}"
+    state: "absent"
+  loop: "{{ ec2_vpc_net_facts.vpcs }}"
+  loop_control:
+    label: "vpc: {{ item.vpc_id }}"
+
+- name: "Destroy route table for zone mgmt"
+  run_once: true
+  ec2_vpc_route_table:
+    region: "{{ ec2_region }}"
+    vpc_id: "{{ item.vpc_id }}"
+    tags:
+      Environment: "{{ ec2_vpc_name }}"
+      Zone: "mgmt"
+    state: "absent"
+  loop: "{{ ec2_vpc_net_facts.vpcs }}"
+  loop_control:
+    label: "vpc: {{ item.vpc_id }}"
+
+- name: "Destroy Outside subnet"
+  run_once: true
+  ec2_vpc_subnet:
+    region: "{{ ec2_region }}"
+    vpc_id: "{{ item.vpc_id }}"
+    cidr: "{{ ec2_vpc_subnet_outside }}"
+    state: "absent"
+  loop: "{{ ec2_vpc_net_facts.vpcs }}"
+  loop_control:
+    label: "vpc: {{ item.vpc_id }}"
+
+- name: "Destroy route table for zone outside"
+  run_once: true
+  ec2_vpc_route_table:
+    region: "{{ ec2_region }}"
+    vpc_id: "{{ item.vpc_id }}"
+    tags:
+      Environment: "{{ ec2_vpc_name }}"
+      Zone: "outside"
+    state: "absent"
+  loop: "{{ ec2_vpc_net_facts.vpcs }}"
+  loop_control:
+    label: "vpc: {{ item.vpc_id }}"
+
+- name: "Destroy Inside subnet"
+  run_once: true
+  ec2_vpc_subnet:
+    region: "{{ ec2_region }}"
+    vpc_id: "{{ item.vpc_id }}"
+    cidr: "{{ ec2_vpc_subnet_inside }}"
+    state: "absent"
+  loop: "{{ ec2_vpc_net_facts.vpcs }}"
+  loop_control:
+    label: "vpc: {{ item.vpc_id }}"
+
+- name: "Destroy route table for zone inside"
+  run_once: true
+  ec2_vpc_route_table:
+    region: "{{ ec2_region }}"
+    vpc_id: "{{ item.vpc_id }}"
+    tags:
+      Environment: "{{ ec2_vpc_name }}"
+      Zone: "inside"
+    state: "absent"
+  loop: "{{ ec2_vpc_net_facts.vpcs }}"
+  loop_control:
+    label: "vpc: {{ item.vpc_id }}"
+
+- name: "Destroy security group"
+  run_once: true
+  ec2_group:
+    region: "{{ ec2_region }}"
+    name: "{{ ec2_group }}"
+    vpc_id: "{{ item.vpc_id }}"
+    state: "absent"
+  loop: "{{ ec2_vpc_net_facts.vpcs }}"
+  loop_control:
+    label: "vpc: {{ item.vpc_id }}"
+
+- name: "Delete vpc"
+  run_once: true
+  ec2_vpc_net:
+    name: "{{ ec2_vpc_name }}"
+    cidr_block: "{{ ec2_vpc_cidr }}"
+    region: "{{ ec2_region }}"
+    state: absent

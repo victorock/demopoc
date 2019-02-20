@@ -1,5 +1,2 @@
-- name: "vpc"
-  include_tasks: "vpc.yaml"
-
-- name: "instance"
-  include_tasks: "{{ ec2_instance }}.yaml"
+- name: "Ensure provision state as {{ provision_state }}"
+  include_tasks: "{{ provision_state }}/main.yaml"

@@ -1,4 +1,5 @@
 - name: "Create vpc"
+  run_once: true
   ec2_vpc_net:
     name: "{{ ec2_vpc_name }}"
     cidr_block: "{{ ec2_vpc_cidr }}"
@@ -6,6 +7,7 @@
   register: ec2_vpc_net
 
 - name: "Create MGMT subnet"
+  run_once: true
   ec2_vpc_subnet:
     region: "{{ ec2_region }}"
     vpc_id: "{{ ec2_vpc_net.vpc.id }}"
@@ -17,6 +19,7 @@
   register: ec2_vpc_subnet_mgmt
 
 - name: "Create Outside subnet"
+  run_once: true
   ec2_vpc_subnet:
     region: "{{ ec2_region }}"
     vpc_id: "{{ ec2_vpc_net.vpc.id }}"
@@ -28,6 +31,7 @@
   register: ec2_vpc_subnet_outside
 
 - name: "Create Inside subnet"
+  run_once: true
   ec2_vpc_subnet:
     region: "{{ ec2_region }}"
     vpc_id: "{{ ec2_vpc_net.vpc.id }}"
@@ -38,12 +42,14 @@
   register: ec2_vpc_subnet_inside
 
 - name: "Associate an internet gateway to the vpc"
+  run_once: true
   ec2_vpc_igw:
     region: "{{ ec2_region }}"
     vpc_id: "{{ ec2_vpc_net.vpc.id }}"
   register: ec2_vpc_igw
 
 - name: "Create route table for zone mgmt"
+  run_once: true
   ec2_vpc_route_table:
     region: "{{ ec2_region }}"
     vpc_id: "{{ ec2_vpc_net.vpc.id }}"
@@ -58,6 +64,7 @@
   register: ec2_vpc_route_table_mgmt
 
 - name: "Create route table for zone outside"
+  run_once: true
   ec2_vpc_route_table:
     region: "{{ ec2_region }}"
     vpc_id: "{{ ec2_vpc_net.vpc.id }}"
@@ -72,6 +79,7 @@
   register: ec2_vpc_route_table_outside
 
 - name: "Create route table for zone inside"
+  run_once: true
   ec2_vpc_route_table:
     region: "{{ ec2_region }}"
     vpc_id: "{{ ec2_vpc_net.vpc.id }}"
@@ -83,15 +91,18 @@
   register: ec2_vpc_route_table_inside
 
 - name: "Ensure presence of keypair"
+  run_once: true
   ec2_key:
+    region: "{{ ec2_region }}"
     name: "{{ ec2_vpc_name }}"
     key_material: "{{ lookup('file', 'keychain/' + ec2_vpc_name + '.pub') }}"
 
 - name: "Ensure security group"
+  run_once: true
   ec2_group:
+    region: "{{ ec2_region }}"
     name: "{{ ec2_group }}"
     description: "{{ ec2_group }}"
     vpc_id: "{{ ec2_vpc_net.vpc.id }}"
-    region: "{{ ec2_region }}"
     rules: "{{ ec2_group_rules }}"
   register: ec2_group

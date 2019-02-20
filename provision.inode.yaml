@@ -1,6 +1,0 @@
-- name: "Provision Isolated Node"
-  hosts: inode
-  connection: local
-  gather_facts: no
-  roles:
-    - provision
