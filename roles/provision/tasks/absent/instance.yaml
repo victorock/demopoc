@@ -31,6 +31,7 @@
     region: "{{ ec2_region }}"
     eni_id: "{{ item.network_interface_id }}"
     force_detach: yes
+    state: "absent"
   loop: "{{ ec2_eni_facts.network_interfaces }}"
   loop_control:
     label: "eni: {{ item.tag_set.name }}, {{ item.tag_set.zone }} ({{ item.network_interface_id }}) "

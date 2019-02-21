@@ -85,5 +85,9 @@
 - name: "Add instance to inventory"
   changed_when: false
   add_host:
-    hostname: "{{ inventory_hostname }}"
+    hostname: "{{ ec2_instance_name }}"
     ansible_host: "{{ ec2_eip_mgmt.public_ip }}"
+    groups:
+     - "tag_Name_{{ ec2_instance_name }}"
+     - "tag_Environment_{{ ec2_vpc_name }}"
+     - "tag_Platform_{{ ansible_network_os }}"
