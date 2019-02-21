@@ -18,6 +18,7 @@
     resource_tags:
       Environment: "{{ ec2_vpc_name }}"
       Name: "mgmt"
+      Zone: "mgmt"
   register: ec2_vpc_subnet_mgmt
 
 - name: "Create Outside subnet"
@@ -31,6 +32,7 @@
     resource_tags:
       Environment: "{{ ec2_vpc_name }}"
       Name: "outside"
+      Zone: "outside"
   register: ec2_vpc_subnet_outside
 
 - name: "Create Inside subnet"
@@ -43,6 +45,7 @@
     resource_tags:
       Environment: "{{ ec2_vpc_name }}"
       Name: "inside"
+      Zone: "inside"
   register: ec2_vpc_subnet_inside
 
 - name: "Associate an internet gateway to the vpc"

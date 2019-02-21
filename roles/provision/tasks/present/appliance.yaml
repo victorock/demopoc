@@ -8,6 +8,15 @@
     delete_on_termination: true
   register: ec2_eni_mgmt
 
+- name: "Tag mgmt ENI"
+  ec2_tag:
+    region: "{{ ec2_region }}"
+    resource: "{{ ec2_eni_mgmt.interface.id }}"
+    tags:
+      Name: "{{ ec2_instance_name }}"
+      Environment: "{{ ec2_vpc_name }}"
+      Zone: "mgmt"
+
 - name: "Associate EIP to mgmt ENI"
   ec2_eip:
     region: "{{ ec2_region }}"
@@ -16,6 +25,15 @@
     release_on_disassociation: true
     reuse_existing_ip_allowed: true
   register: ec2_eip_mgmt
+
+- name: "Tag mgmt EIP"
+  ec2_tag:
+    region: "{{ ec2_region }}"
+    resource: "{{ ec2_eip_mgmt.allocation_id }}"
+    tags:
+      Name: "{{ ec2_instance_name }}"
+      Environment: "{{ ec2_vpc_name }}"
+      Zone: "mgmt"
 
 - name: "Create eni for outside"
   ec2_eni:
@@ -27,6 +45,15 @@
     delete_on_termination: true
   register: ec2_eni_outside
 
+- name: "Tag outside ENI"
+  ec2_tag:
+    region: "{{ ec2_region }}"
+    resource: "{{ ec2_eni_outside.interface.id }}"
+    tags:
+      Name: "{{ ec2_instance_name }}"
+      Environment: "{{ ec2_vpc_name }}"
+      Zone: "outside"
+
 - name: "Associate EIP to outside ENI"
   ec2_eip:
     region: "{{ ec2_region }}"
@@ -35,6 +62,15 @@
     release_on_disassociation: true
     reuse_existing_ip_allowed: true
   register: ec2_eip_outside
+
+- name: "Tag outside EIP"
+  ec2_tag:
+    region: "{{ ec2_region }}"
+    resource: "{{ ec2_eip_outside.allocation_id }}"
+    tags:
+      Name: "{{ ec2_instance_name }}"
+      Environment: "{{ ec2_vpc_name }}"
+      Zone: "outside"
 
 - name: "Create eni for inside"
   ec2_eni:
@@ -45,6 +81,15 @@
     private_ip_address: "{{ ec2_instance_interface.inside.private_ip_address }}"
     delete_on_termination: true
   register: ec2_eni_inside
+
+- name: "Tag inside ENI"
+  ec2_tag:
+    region: "{{ ec2_region }}"
+    resource: "{{ ec2_eni_inside.interface.id }}"
+    tags:
+      Name: "{{ ec2_instance_name }}"
+      Environment: "{{ ec2_vpc_name }}"
+      Zone: "inside"
 
 - name: "Find ami in marketplace"
   ec2_ami_facts:

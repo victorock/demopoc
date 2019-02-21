@@ -8,10 +8,10 @@ Provision disposable topology with network devices from AWS marketplace.
 | `fw01-asa` | `10.1.0.253` | `10.1.1.253` | `10.1.2.253` |  
 | `lb01-tmos` | `10.1.0.252` | `10.1.1.252` | `10.1.2.252` |  
 | `ipam01-nios` | `10.1.0.251` | `10.1.1.251` | `10.1.2.251` |  
-| `tower01-inode` | `10.1.0.250` | `10.1.1.250` | `10.1.2.250` |  
+| `tower01-inode` | `10.1.0.250` | `-` | `10.1.2.250` |  
 | `fw01-fortios` | `10.1.0.249` | `10.1.1.249` | `10.1.2.249` |  
-| `lin01-rhel7` | `10.1.0.10` | `10.1.1.10` | `10.1.2.10` |  
-| `win01-win2016` | `10.1.0.11` | `10.1.1.11` | `10.1.2.11` |  
+| `lin01-rhel7` | `10.1.0.10` | `-` | `10.1.2.10` |  
+| `win01-win2016` | `10.1.0.11` | `-` | `10.1.2.11` |  
 
 ## Nodes
 
@@ -138,7 +138,7 @@ Microsoft Windows:
 
 ## Howto
 
-To provision the whole topology: `ansible-playbook provision.yaml`
+To provision the entire topology: `ansible-playbook provision.yaml`
 
 To provision specific appliances:
 - Cisco ASA: `ansible-playbook provision.yaml -e demopoc=asa`
