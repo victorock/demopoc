@@ -3,12 +3,19 @@
   ec2_instance_facts:
     region: "{{ ec2_region }}"
     filters:
-      "instance-type": "{{ ec2_instance_type }}"
-      "key-name": "{{ ec2_instance_key }}"
       "tag:Name": "{{ ec2_instance_name }}"
       "tag:Environment": "{{ ec2_vpc_name }}"
-      "tag:Platform": "{{ ansible_network_os | default('appliance') }}"
   register: ec2_instance_facts
+
+- name: "Terminate Instance"
+  ec2_instance:
+    region: "{{ ec2_region }}"
+    instance_ids: "{{ item.instance_id }}"
+    wait: true
+    state: "terminated"
+  loop: "{{ ec2_instance_facts.instances }}"
+  loop_control:
+    label: "instance: {{ item.tags.Name }} ({{ item.instance_id }})"
 
 - name: "Gather ENI facts"
   ec2_eni_facts:
@@ -17,14 +24,6 @@
       "tag:Name": "{{ ec2_instance_name }}"
       "tag:Environment": "{{ ec2_vpc_name }}"
   register: ec2_eni_facts
-
-- name: "Gather EIP facts"
-  ec2_eip_facts:
-    region: "{{ ec2_region }}"
-    filters:
-      "tag:Name": "{{ ec2_instance_name }}"
-      "tag:Environment": "{{ ec2_vpc_name }}"
-  register: ec2_eip_facts
 
 - name: "Destroy ENIs"
   ec2_eni:
@@ -36,6 +35,14 @@
   loop_control:
     label: "eni: {{ item.tag_set.name }}, {{ item.tag_set.zone }} ({{ item.network_interface_id }}) "
 
+- name: "Gather EIP facts"
+  ec2_eip_facts:
+    region: "{{ ec2_region }}"
+    filters:
+      "tag:Name": "{{ ec2_instance_name }}"
+      "tag:Environment": "{{ ec2_vpc_name }}"
+  register: ec2_eip_facts
+
 - name: "Release instance EIPs"
   ec2_eip:
     region: "{{ ec2_region }}"
@@ -46,13 +53,3 @@
   loop: "{{ ec2_eip_facts.addresses }}"
   loop_control:
     label: "eip: {{ item.tags.Name }}, {{ item.tags.Zone }} ({{ item.allocation_id }})"
-
-- name: "Terminate Instance"
-  ec2_instance:
-    region: "{{ ec2_region }}"
-    instance_ids: "{{ item.instance_id }}"
-    wait: true
-    state: "terminated"
-  loop: "{{ ec2_instance_facts.instances }}"
-  loop_control:
-    label: "instance: {{ item.tags.Name }} ({{ item.instance_id }})"

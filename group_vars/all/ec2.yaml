@@ -1,5 +1,4 @@
 ec2_region: "eu-central-1"
-ec2_vpc_id: "vpc-0a99cd396411d0344"
 ec2_vpc_name: "demobox"
 ec2_vpc_cidr: 10.1.0.0/16
 ec2_vpc_subnet_mgmt: "10.1.0.0/24"
