@@ -41,6 +41,7 @@
     region: "{{ ec2_region }}"
     device_id: "{{ item.allocation_id }}"
     in_vpc: true
+    release_on_disassociation: true
     state: "absent"
   loop: "{{ ec2_eip_facts.addresses }}"
   loop_control:
