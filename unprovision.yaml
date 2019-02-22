@@ -1,0 +1,11 @@
+---
+- name: "Unprovision"
+  hosts: "all"
+  connection: local
+  gather_facts: no
+  tasks:
+    - name: "Unprovision Instances"
+      include_role:
+        name: "provision"
+        tasks_from: "absent/instance.yaml"
+

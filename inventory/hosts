@@ -1,24 +1,28 @@
 [all:children]
+firewall
+host
+loadbalance
+
+[firewall:children]
+panos
 asa
+fortios
+
+[loadbalance:children]
+tmos
+
+[host:children]
 tower
 linux
-panos
-tmos
-nios
-fortios
 windows
-
-[asa]
-fw01-asa
-
-[tower]
-tower01-inode
-
-[linux]
-lin01-rhel7
+nios
+splunk
 
 [panos]
 fw01-panos
+
+[asa]
+fw01-asa
 
 [fortios]
 fw01-fortios
@@ -26,8 +30,18 @@ fw01-fortios
 [tmos]
 lb01-tmos
 
-[nios]
-ipam01-nios
+[tower]
+host01-tower
+
+[linux]
+host01-linux
 
 [windows]
-win01-win2016
+host01-windows
+
+[nios]
+host01-nios
+
+[splunk]
+host01-splunk
+

@@ -1,17 +1,18 @@
+---
 - name: "Create eni for mgmt"
   ec2_eni:
     region: "{{ ec2_region }}"
     device_index: 0
-    subnet_id: "{{ ec2_vpc_subnet_mgmt.subnet.id }}"
-    security_groups: "{{ ec2_group.group_id }}"
+    subnet_id: "{{ r_ec2_vpc_subnet_mgmt.subnet.id }}"
+    security_groups: "{{ r_ec2_group.group_id }}"
     private_ip_address: "{{ ec2_instance_interface.mgmt.private_ip_address }}"
     delete_on_termination: true
-  register: ec2_eni_mgmt
+  register: r_ec2_eni_mgmt
 
 - name: "Tag mgmt ENI"
   ec2_tag:
     region: "{{ ec2_region }}"
-    resource: "{{ ec2_eni_mgmt.interface.id }}"
+    resource: "{{ r_ec2_eni_mgmt.interface.id }}"
     tags:
       Name: "{{ ec2_instance_name }}"
       Environment: "{{ ec2_vpc_name }}"
@@ -20,16 +21,16 @@
 - name: "Associate EIP to mgmt ENI"
   ec2_eip:
     region: "{{ ec2_region }}"
-    device_id: "{{ ec2_eni_mgmt.interface.id }}"
+    device_id: "{{ r_ec2_eni_mgmt.interface.id }}"
     in_vpc: true
     release_on_disassociation: true
     reuse_existing_ip_allowed: true
-  register: ec2_eip_mgmt
+  register: r_ec2_eip_mgmt
 
 - name: "Tag mgmt EIP"
   ec2_tag:
     region: "{{ ec2_region }}"
-    resource: "{{ ec2_eip_mgmt.allocation_id }}"
+    resource: "{{ r_ec2_eip_mgmt.allocation_id }}"
     tags:
       Name: "{{ ec2_instance_name }}"
       Environment: "{{ ec2_vpc_name }}"
@@ -39,16 +40,16 @@
   ec2_eni:
     region: "{{ ec2_region }}"
     device_index: 1
-    subnet_id: "{{ ec2_vpc_subnet_outside.subnet.id }}"
+    subnet_id: "{{ r_ec2_vpc_subnet_outside.subnet.id }}"
     security_groups: "{{ ec2_group.group_id }}"
     private_ip_address: "{{ ec2_instance_interface.outside.private_ip_address }}"
     delete_on_termination: true
-  register: ec2_eni_outside
+  register: r_ec2_eni_outside
 
 - name: "Tag outside ENI"
   ec2_tag:
     region: "{{ ec2_region }}"
-    resource: "{{ ec2_eni_outside.interface.id }}"
+    resource: "{{ r_ec2_eni_outside.interface.id }}"
     tags:
       Name: "{{ ec2_instance_name }}"
       Environment: "{{ ec2_vpc_name }}"
@@ -57,16 +58,16 @@
 - name: "Associate EIP to outside ENI"
   ec2_eip:
     region: "{{ ec2_region }}"
-    device_id: "{{ ec2_eni_outside.interface.id }}"
+    device_id: "{{ r_ec2_eni_outside.interface.id }}"
     in_vpc: true
     release_on_disassociation: true
     reuse_existing_ip_allowed: true
-  register: ec2_eip_outside
+  register: r_ec2_eip_outside
 
 - name: "Tag outside EIP"
   ec2_tag:
     region: "{{ ec2_region }}"
-    resource: "{{ ec2_eip_outside.allocation_id }}"
+    resource: "{{ r_ec2_eip_outside.allocation_id }}"
     tags:
       Name: "{{ ec2_instance_name }}"
       Environment: "{{ ec2_vpc_name }}"
@@ -76,16 +77,16 @@
   ec2_eni:
     region: "{{ ec2_region }}"
     device_index: 2
-    subnet_id: "{{ ec2_vpc_subnet_inside.subnet.id }}"
-    security_groups: "{{ ec2_group.group_id }}"
+    subnet_id: "{{ r_ec2_vpc_subnet_inside.subnet.id }}"
+    security_groups: "{{ r_ec2_group.group_id }}"
     private_ip_address: "{{ ec2_instance_interface.inside.private_ip_address }}"
     delete_on_termination: true
-  register: ec2_eni_inside
+  register: r_ec2_eni_inside
 
 - name: "Tag inside ENI"
   ec2_tag:
     region: "{{ ec2_region }}"
-    resource: "{{ ec2_eni_inside.interface.id }}"
+    resource: "{{ r_ec2_eni_inside.interface.id }}"
     tags:
       Name: "{{ ec2_instance_name }}"
       Environment: "{{ ec2_vpc_name }}"
@@ -98,21 +99,22 @@
     filters:
       name: "{{ ec2_ami.name }}"
       architecture: "{{ ec2_ami.architecture }}"
-  register: ec2_ami_facts
+  register: r_ec2_ami_facts
 
 - name: "Create Instance"
   vars:
-    ec2_ami_image: "{{ ec2_ami_facts.images | selectattr('name', 'defined') | sort(attribute='creation_date') | last }}"
+    ec2_ami: "{{ r_ec2_ami_facts.images | selectattr('name', 'defined') | sort(attribute='creation_date') | last }}"
   ec2_instance:
     region: "{{ ec2_region }}"
     instance_type: "{{ ec2_instance_type }}"
-    image_id: "{{ ec2_ami_image.image_id }}"
+    image_id: "{{ ec2_ami.image_id }}"
     key_name: "{{ ec2_instance_key }}"
+    user_data: "{{ ec2_instance_user_data | default(omit) }}"
     network:
       interfaces:
-        - "{{ ec2_eni_mgmt.interface.id }}"
-        - "{{ ec2_eni_outside.interface.id }}"
-        - "{{ ec2_eni_inside.interface.id }}"
+        - "{{ r_ec2_eni_mgmt.interface.id }}"
+        - "{{ r_ec2_eni_outside.interface.id }}"
+        - "{{ r_ec2_eni_inside.interface.id }}"
     wait: true
     tags:
       Name: "{{ ec2_instance_name }}"
@@ -124,8 +126,12 @@
   changed_when: false
   add_host:
     hostname: "{{ ec2_instance_name }}"
-    ansible_host: "{{ ec2_eip_mgmt.public_ip }}"
+    ansible_host: "{{ r_ec2_eip_mgmt.public_ip }}"
     groups:
      - "tag_Name_{{ ec2_instance_name }}"
-     - "tag_Environment_{{ ec2_vpc_name }}"
+     - "tag_Environment_{{ r_ec2_vpc_name }}"
      - "tag_Platform_{{ ansible_network_os }}"
+
+- name: "Ready"
+  debug:
+    msg: "{{ ec2_instance_name }}: ssh {{ ansible_user }}@{{ ansible_host }} -i keychain/{{ ec2_vpc_name }}"

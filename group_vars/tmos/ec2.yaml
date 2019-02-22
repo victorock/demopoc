@@ -1,5 +1,8 @@
 ec2_instance_role: "appliance"
 ec2_instance_type: "t2.large"
+ec2_instance_user_data: |
+  admin_password: '!superAdmin!'
+
 ec2_ami:
   name: 'F5 Networks Prelicensed Hourly BIGIP-13.1*Good 25MBPS*'
   owners: 679593333241

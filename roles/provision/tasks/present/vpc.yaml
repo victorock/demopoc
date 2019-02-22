@@ -1,3 +1,4 @@
+---
 - name: "Create vpc"
   run_once: true
   delegate_to: localhost
@@ -5,84 +6,84 @@
     name: "{{ ec2_vpc_name }}"
     cidr_block: "{{ ec2_vpc_cidr }}"
     region: "{{ ec2_region }}"
-  register: ec2_vpc_net
+  register: r_ec2_vpc_net
 
 - name: "Create MGMT subnet"
   run_once: true
   delegate_to: localhost
   ec2_vpc_subnet:
     region: "{{ ec2_region }}"
-    vpc_id: "{{ ec2_vpc_net.vpc.id }}"
+    vpc_id: "{{ r_ec2_vpc_net.vpc.id }}"
     cidr: "{{ ec2_vpc_subnet_mgmt }}"
     map_public: true
     resource_tags:
       Environment: "{{ ec2_vpc_name }}"
       Name: "mgmt"
       Zone: "mgmt"
-  register: ec2_vpc_subnet_mgmt
+  register: r_ec2_vpc_subnet_mgmt
 
 - name: "Create Outside subnet"
   run_once: true
   delegate_to: localhost
   ec2_vpc_subnet:
     region: "{{ ec2_region }}"
-    vpc_id: "{{ ec2_vpc_net.vpc.id }}"
+    vpc_id: "{{ r_ec2_vpc_net.vpc.id }}"
     cidr: "{{ ec2_vpc_subnet_outside }}"
     map_public: true
     resource_tags:
       Environment: "{{ ec2_vpc_name }}"
       Name: "outside"
       Zone: "outside"
-  register: ec2_vpc_subnet_outside
+  register: r_ec2_vpc_subnet_outside
 
 - name: "Create Inside subnet"
   run_once: true
   delegate_to: localhost
   ec2_vpc_subnet:
     region: "{{ ec2_region }}"
-    vpc_id: "{{ ec2_vpc_net.vpc.id }}"
+    vpc_id: "{{ r_ec2_vpc_net.vpc.id }}"
     cidr: "{{ ec2_vpc_subnet_inside }}"
     resource_tags:
       Environment: "{{ ec2_vpc_name }}"
       Name: "inside"
       Zone: "inside"
-  register: ec2_vpc_subnet_inside
+  register: r_ec2_vpc_subnet_inside
 
 - name: "Associate an internet gateway to the vpc"
   run_once: true
   delegate_to: localhost
   ec2_vpc_igw:
     region: "{{ ec2_region }}"
-    vpc_id: "{{ ec2_vpc_net.vpc.id }}"
-  register: ec2_vpc_igw
+    vpc_id: "{{ r_ec2_vpc_net.vpc.id }}"
+  register: r_ec2_vpc_igw
 
 - name: "Create route table for zone mgmt"
   run_once: true
   delegate_to: localhost
   ec2_vpc_route_table:
     region: "{{ ec2_region }}"
-    vpc_id: "{{ ec2_vpc_net.vpc.id }}"
+    vpc_id: "{{ r_ec2_vpc_net.vpc.id }}"
     subnets:
-      - "{{ ec2_vpc_subnet_mgmt.subnet.cidr_block }}"
+      - "{{ r_ec2_vpc_subnet_mgmt.subnet.cidr_block }}"
     routes:
       - dest: 0.0.0.0/0
-        gateway_id: "{{ ec2_vpc_igw.gateway_id }}"
+        gateway_id: "{{ r_ec2_vpc_igw.gateway_id }}"
     tags:
       Environment: "{{ ec2_vpc_name }}"
       Zone: "mgmt"
-  register: ec2_vpc_route_table_mgmt
+  register: r_ec2_vpc_route_table_mgmt
 
 - name: "Create route table for zone outside"
   run_once: true
   delegate_to: localhost
   ec2_vpc_route_table:
     region: "{{ ec2_region }}"
-    vpc_id: "{{ ec2_vpc_net.vpc.id }}"
+    vpc_id: "{{ r_ec2_vpc_net.vpc.id }}"
     subnets:
-      - "{{ ec2_vpc_subnet_outside.subnet.cidr_block }}"
+      - "{{ r_ec2_vpc_subnet_outside.subnet.cidr_block }}"
     routes:
       - dest: 0.0.0.0/0
-        gateway_id: "{{ ec2_vpc_igw.gateway_id }}"
+        gateway_id: "{{ r_ec2_vpc_igw.gateway_id }}"
     tags:
       Environment: "{{ ec2_vpc_name }}"
       Zone: "outside"
@@ -93,13 +94,13 @@
   delegate_to: localhost
   ec2_vpc_route_table:
     region: "{{ ec2_region }}"
-    vpc_id: "{{ ec2_vpc_net.vpc.id }}"
+    vpc_id: "{{ r_ec2_vpc_net.vpc.id }}"
     subnets:
-      - "{{ ec2_vpc_subnet_inside.subnet.cidr_block }}"
+      - "{{ r_ec2_vpc_subnet_inside.subnet.cidr_block }}"
     tags:
       Environment: "{{ ec2_vpc_name }}"
       Zone: "inside"
-  register: ec2_vpc_route_table_inside
+  register: r_ec2_vpc_route_table_inside
 
 - name: "Ensure presence of keypair"
   run_once: true
@@ -116,6 +117,6 @@
     region: "{{ ec2_region }}"
     name: "{{ ec2_group }}"
     description: "{{ ec2_group }}"
-    vpc_id: "{{ ec2_vpc_net.vpc.id }}"
+    vpc_id: "{{ r_ec2_vpc_net.vpc.id }}"
     rules: "{{ ec2_group_rules }}"
-  register: ec2_group
+  register: r_ec2_group

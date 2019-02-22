@@ -1,4 +1,14 @@
 ---
+- name: "Gather VPC facts"
+  run_once: true
+  delegate_to: localhost
+  ec2_vpc_net_facts:
+    region: "{{ ec2_region }}"
+    filters:
+      "cidr": "{{ ec2_vpc_cidr }}"
+      "tag:Name": "{{ ec2_vpc_name }}"
+  register: r_ec2_vpc_net_facts
+
 - name: "Disassociate internet gateway to vpc"
   run_once: true
   delegate_to: localhost
@@ -6,7 +16,7 @@
     region: "{{ ec2_region }}"
     vpc_id: "{{ item.vpc_id }}"
     state: "absent"
-  loop: "{{ ec2_instance_facts.instances }}"
+  loop: "{{ r_ec2_vpc_net_facts.vpcs }}"
   loop_control:
     label: "vpc: {{ item.vpc_id }}"
 
@@ -18,7 +28,7 @@
     vpc_id: "{{ item.vpc_id }}"
     cidr: "{{ ec2_vpc_subnet_mgmt }}"
     state: "absent"
-  loop: "{{ ec2_instance_facts.instances }}"
+  loop: "{{ r_ec2_vpc_net_facts.vpcs }}"
   loop_control:
     label: "vpc: {{ item.vpc_id }}"
 
@@ -32,7 +42,7 @@
       Environment: "{{ ec2_vpc_name }}"
       Zone: "mgmt"
     state: "absent"
-  loop: "{{ ec2_instance_facts.instances }}"
+  loop: "{{ r_ec2_vpc_net_facts.vpcs }}"
   loop_control:
     label: "vpc: {{ item.vpc_id }}"
 
@@ -44,7 +54,7 @@
     vpc_id: "{{ item.vpc_id }}"
     cidr: "{{ ec2_vpc_subnet_outside }}"
     state: "absent"
-  loop: "{{ ec2_instance_facts.instances }}"
+  loop: "{{ r_ec2_vpc_net_facts.vpcs }}"
   loop_control:
     label: "vpc: {{ item.vpc_id }}"
 
@@ -58,7 +68,7 @@
       Environment: "{{ ec2_vpc_name }}"
       Zone: "outside"
     state: "absent"
-  loop: "{{ ec2_instance_facts.instances }}"
+  loop: "{{ r_ec2_vpc_net_facts.vpcs }}"
   loop_control:
     label: "vpc: {{ item.vpc_id }}"
 
@@ -70,7 +80,7 @@
     vpc_id: "{{ item.vpc_id }}"
     cidr: "{{ ec2_vpc_subnet_inside }}"
     state: "absent"
-  loop: "{{ ec2_instance_facts.instances }}"
+  loop: "{{ r_ec2_vpc_net_facts.vpcs }}"
   loop_control:
     label: "vpc: {{ item.vpc_id }}"
 
@@ -84,7 +94,7 @@
       Environment: "{{ ec2_vpc_name }}"
       Zone: "inside"
     state: "absent"
-  loop: "{{ ec2_instance_facts.instances }}"
+  loop: "{{ r_ec2_vpc_net_facts.vpcs }}"
   loop_control:
     label: "vpc: {{ item.vpc_id }}"
 
@@ -96,7 +106,7 @@
     name: "{{ ec2_group }}"
     vpc_id: "{{ item.vpc_id }}"
     state: "absent"
-  loop: "{{ ec2_instance_facts.instances }}"
+  loop: "{{ r_ec2_vpc_net_facts.vpcs }}"
   loop_control:
     label: "vpc: {{ item.vpc_id }}"
 
@@ -105,9 +115,9 @@
   delegate_to: localhost
   ec2_vpc_net:
     name: "{{ ec2_vpc_name }}"
-    cidr_block: "{{ ec2_vpc_cidr }}"
+    cidr_block: "{{ item.cidr_block }}"
     region: "{{ ec2_region }}"
     state: "absent"
-  loop: "{{ ec2_instance_facts.instances }}"
+  loop: "{{ r_ec2_vpc_net_facts.vpcs }}"
   loop_control:
     label: "vpc: {{ item.vpc_id }}"

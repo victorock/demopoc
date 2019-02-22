@@ -5,7 +5,7 @@
     filters:
       "tag:Name": "{{ ec2_instance_name }}"
       "tag:Environment": "{{ ec2_vpc_name }}"
-  register: ec2_instance_facts
+  register: r_ec2_instance_facts
 
 - name: "Terminate Instance"
   ec2_instance:
@@ -13,7 +13,7 @@
     instance_ids: "{{ item.instance_id }}"
     wait: true
     state: "terminated"
-  loop: "{{ ec2_instance_facts.instances }}"
+  loop: "{{ r_ec2_instance_facts.instances }}"
   loop_control:
     label: "instance: {{ item.tags.Name }} ({{ item.instance_id }})"
 
@@ -23,7 +23,7 @@
     filters:
       "tag:Name": "{{ ec2_instance_name }}"
       "tag:Environment": "{{ ec2_vpc_name }}"
-  register: ec2_eni_facts
+  register: r_ec2_eni_facts
 
 - name: "Destroy ENIs"
   ec2_eni:
@@ -31,7 +31,7 @@
     eni_id: "{{ item.network_interface_id }}"
     force_detach: yes
     state: "absent"
-  loop: "{{ ec2_eni_facts.network_interfaces }}"
+  loop: "{{ r_ec2_eni_facts.network_interfaces }}"
   loop_control:
     label: "eni: {{ item.tag_set.name }}, {{ item.tag_set.zone }} ({{ item.network_interface_id }}) "
 
@@ -41,15 +41,15 @@
     filters:
       "tag:Name": "{{ ec2_instance_name }}"
       "tag:Environment": "{{ ec2_vpc_name }}"
-  register: ec2_eip_facts
+  register: r_ec2_eip_facts
 
 - name: "Release instance EIPs"
   ec2_eip:
     region: "{{ ec2_region }}"
-    device_id: "{{ item.allocation_id }}"
+    public_ip: "{{ item.public_ip }}"
     in_vpc: true
     release_on_disassociation: true
     state: "absent"
-  loop: "{{ ec2_eip_facts.addresses }}"
+  loop: "{{ r_ec2_eip_facts.addresses }}"
   loop_control:
-    label: "eip: {{ item.tags.Name }}, {{ item.tags.Zone }} ({{ item.allocation_id }})"
+    label: "eip: {{ item.tags.Name }}, {{ item.tags.Zone }} ({{ item.public_ip }}) "

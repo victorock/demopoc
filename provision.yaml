@@ -1,6 +1,6 @@
 ---
 - name: "Provision"
-  hosts: "{{ demopoc | default('all') }}"
+  hosts: "all"
   connection: local
   gather_facts: no
   roles:
