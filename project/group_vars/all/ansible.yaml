@@ -1,2 +1,0 @@
----
-ansible_private_key_file: "keychain/{{ ec2_vpc_name }}"

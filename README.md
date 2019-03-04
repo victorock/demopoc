@@ -127,8 +127,8 @@ ec2_vpc_cidr: "10.1.0.0/16"
 deploy_password: "demobox"
 ```
 How to setup my own ssh_keys?
-> - Put the public ssh_key in `project/keychain/\<ec2_vpc_name\>.
-> - Replace the private
+> - Save the **public ssh_key** in `project/keychain/<ec2_vpc_name>`.
+> - Replace the **private ssh_key** in `env/ssh_key`.
 
 How to `filter inventory` to list only my resources?
 > - Edit the file [`inventory/demobox.aws_ec2.yaml`](inventory/demobox.aws_ec2.yaml):
