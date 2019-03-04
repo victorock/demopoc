@@ -107,7 +107,6 @@ Request `Red Hat Ansible Tower` subscription [here](https://www.ansible.com/lice
 **Accept** the following subscriptions:
   - Fortigate (**required**): Click [_Continue to Subscribe_](https://aws.amazon.com/marketplace/pp/B00PCZSWDA)
 
-
 ## Howto
 How to customize my `environment`?
 > - Edit the file [`env/extravars`](env/extravars).  

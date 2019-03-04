@@ -265,43 +265,43 @@ tower_config:
         - team: "secops"
           role: "admin"
           credential: "network-ios-ssh"
-          ssh_key_data: "keychain/{{ demopoc_name }}"
+          ssh_key_data: "keychain/{{ ec2_vpc_name }}"
 
 #### PANOS
         - team: "secops"
           role: "admin"
           credential: "network-panos-ssh"
-          ssh_key_data: "keychain/{{ demopoc_name }}"
+          ssh_key_data: "keychain/{{ ec2_vpc_name }}"
 
 #### TMOS
         - team: "secops"
           role: "admin"
           credential: "network-tmos-ssh"
-          ssh_key_data: "keychain/{{ demopoc_name }}"
+          ssh_key_data: "keychain/{{ ec2_vpc_name }}"
 
 #### NIOS
         - team: "secops"
           role: "admin"
           credential: "network-nios-ssh"
-          ssh_key_data: "keychain/{{ demopoc_name }}"
+          ssh_key_data: "keychain/{{ ec2_vpc_name }}"
 
 #### FORTIOS
         - team: "secops"
           role: "admin"
           credential: "network-fortios-ssh"
-          ssh_key_data: "keychain/{{ demopoc_name }}"
+          ssh_key_data: "keychain/{{ ec2_vpc_name }}"
 
 #### ASA
         - team: "secops"
           role: "admin"
           credential: "network-asa-ssh"
-          ssh_key_data: "keychain/{{ demopoc_name }}"
+          ssh_key_data: "keychain/{{ ec2_vpc_name }}"
 
 #### Linux
         - team: "secops"
           role: "admin"
           credential: "system-linux-ssh"
-          ssh_key_data: "keychain/{{ demopoc_name }}"
+          ssh_key_data: "keychain/{{ ec2_vpc_name }}"
 
 #### Windows
         - team: "secops"

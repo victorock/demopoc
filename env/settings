@@ -1,5 +1,5 @@
 ---
-idle_timeout: 600
+idle_timeout: 900
 job_timeout: 3600
 fact_cache: "fact_cache"
 supress_ansible_output: false
