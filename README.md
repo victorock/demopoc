@@ -76,7 +76,7 @@ Installation of the following packages:
 ### Applications
 #### Tower
 Request `Red Hat Ansible Tower` subscription [here](https://www.ansible.com/license):
-  - **Save** the _`license`_ **file** in _`project/licenses/`**`tower`**_.
+  - **Save** the _`license`_ **file** in _`project/licenses/tower`_.
 
 ### Infoblox
 **Accept** the following subscriptions:
