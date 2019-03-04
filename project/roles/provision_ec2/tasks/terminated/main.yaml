@@ -1,0 +1,2 @@
+- name: "absent of instances"
+  include_tasks: "{{ role_path }}/tasks/absent/instance.yaml"

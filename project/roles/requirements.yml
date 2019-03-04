@@ -1,0 +1,12 @@
+---
+# External roles goes in here
+# Only refer to content comming from galaxy
+#  NEVER specify the src (Default: galaxy).
+#  SHALL specify the version.
+- name: "victorock.tower_config"
+- name: "victorock.tower_setup"
+- name: "victorock.tower_facts"
+- name: "victorock.download"
+- name: "victorock.paloalto_panos"
+- name: "ansible-network.network-engine"
+- name: "ansible-network.cisco_ios"

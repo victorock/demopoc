@@ -1,2 +1,0 @@
-- name: "Ensure provision state as {{ provision_state }}"
-  include_tasks: "{{ provision_state }}/main.yaml"

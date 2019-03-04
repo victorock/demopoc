@@ -1,0 +1,3 @@
+ansible_network_os: "windows"
+ansible_connection: "winrm"
+ansible_gather_facts: false

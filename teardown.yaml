@@ -1,8 +1,0 @@
----
-- name: "Teardown"
-  hosts: "all"
-  connection: local
-  gather_facts: no
-  roles:
-    - role: provision
-      provision_state: absent

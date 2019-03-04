@@ -1,0 +1,7 @@
+---
+- name: "Deploy"
+  hosts: "{{ applications | default('all') }}"
+  vars:
+    ansible_become: true
+  roles:
+    - role: "deploy"

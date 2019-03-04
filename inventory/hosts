@@ -1,7 +1,11 @@
 [all:children]
-firewall
 host
+network
+
+[network:children]
+firewall
 loadbalance
+router
 
 [firewall:children]
 panos
@@ -10,6 +14,9 @@ fortios
 
 [loadbalance:children]
 tmos
+
+[router:children]
+ios
 
 [host:children]
 tower
@@ -45,3 +52,5 @@ host01-nios
 [splunk]
 host01-splunk
 
+[ios]
+rtr01-ios

@@ -1,0 +1,2 @@
+---
+deploy_provider: "deploy_fortios"

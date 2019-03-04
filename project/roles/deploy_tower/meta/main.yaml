@@ -1,0 +1,22 @@
+---
+dependencies:
+  - role: "deploy_linux"
+    autorun: true
+
+  - role: "victorock.tower_setup"
+    autorun: true
+
+galaxy_info:
+  role_name: deploy_tower
+  author: "Victor da Costa"
+  description: "Metarole to deploy Tower"
+  license: GPLv3
+  min_ansible_version: 2.8
+  platforms:
+  - name: EL
+    versions:
+    - 7
+  galaxy_tags:
+    - automation
+    - system
+    - lab

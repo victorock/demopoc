@@ -1,0 +1,8 @@
+*.*/
+!README*
+!.gitignore
+!prepare*/**
+!provision*/**
+!build*/**
+!deploy*/**
+!requirements.y*l

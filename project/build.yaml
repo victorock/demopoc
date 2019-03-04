@@ -1,0 +1,10 @@
+---
+- name: "Build"
+  hosts: "{{ applications | default('all') }}"
+  vars:
+    ansible_connection: "local"
+    ansible_gather_facts: false
+  roles:
+    - role: "build"
+      
+

@@ -1,0 +1,18 @@
+ec2_instance_role: "network"
+ec2_instance_type: "t2.large"
+ec2_instance_user_data: |
+  admin_password: '{{ demobox_password }}'
+
+ec2_ami:
+  name: "F5*"
+  owners: "679593333241"
+  architecture: "x86_64"
+  # GOOD 25mbps
+  product_code: "8esk90vx7v713sa0muq2skw3j"
+
+ec2_group: "{{ ec2_vpc_name }}"
+ec2_group_rules:
+  - proto: -1
+    from_port: -1
+    to_port: -1
+    cidr_ip: 0.0.0.0/0

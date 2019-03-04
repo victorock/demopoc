@@ -1,0 +1,9 @@
+
+- name: "Ensure provision state as {{ ec2_state }}"
+  block:
+    - name: "{{ ec2_state }}/main.yaml"
+      include_tasks: "{{ ec2_state }}/main.yaml"
+  rescue:
+    - name: "not implemented"
+      fail:
+        msg: "provision_ec2 state {{ ec2_state }} is not implemented"

@@ -1,0 +1,153 @@
+---
+- name: "Create ENI: mgmt"
+  delegate_to: localhost
+  ec2_eni:
+    region: "{{ ec2_region }}"
+    device_index: 0
+    subnet_id: "{{ r_ec2_vpc_subnet_mgmt.subnet.id }}"
+    security_groups: "{{ r_ec2_group.group_id }}"
+    private_ip_address: "{{ ec2_instance_interface.mgmt.private_ip_address }}"
+    delete_on_termination: true
+  register: r_ec2_eni_mgmt
+
+- name: "Tag ENI: mgmt"
+  delegate_to: localhost
+  ec2_tag:
+    region: "{{ ec2_region }}"
+    resource: "{{ r_ec2_eni_mgmt.interface.id }}"
+    tags:
+      Name: "{{ ec2_instance_name }}"
+      Environment: "{{ ec2_vpc_name }}"
+      Zone: "mgmt"
+
+- name: "Associate EIP: mgmt"
+  delegate_to: localhost
+  ec2_eip:
+    region: "{{ ec2_region }}"
+    device_id: "{{ r_ec2_eni_mgmt.interface.id }}"
+    private_ip_address: "{{ ec2_instance_interface.mgmt.private_ip_address }}"
+    in_vpc: true
+    release_on_disassociation: true
+    reuse_existing_ip_allowed: true
+  register: r_ec2_eip_mgmt
+
+- name: "Tag EIP: mgmt"
+  delegate_to: localhost
+  ec2_tag:
+    region: "{{ ec2_region }}"
+    resource: "{{ r_ec2_eip_mgmt.allocation_id }}"
+    tags:
+      Name: "{{ ec2_instance_name }}"
+      Environment: "{{ ec2_vpc_name }}"
+      Zone: "mgmt"
+
+- name: "Create ENI: outside"
+  delegate_to: localhost
+  ec2_eni:
+    region: "{{ ec2_region }}"
+    device_index: 1
+    subnet_id: "{{ r_ec2_vpc_subnet_outside.subnet.id }}"
+    security_groups: "{{ r_ec2_group.group_id }}"
+    private_ip_address: "{{ ec2_instance_interface.outside.private_ip_address }}"
+    delete_on_termination: true
+  register: r_ec2_eni_outside
+
+- name: "Tag ENI: outside"
+  delegate_to: localhost
+  ec2_tag:
+    region: "{{ ec2_region }}"
+    resource: "{{ r_ec2_eni_outside.interface.id }}"
+    tags:
+      Name: "{{ ec2_instance_name }}"
+      Environment: "{{ ec2_vpc_name }}"
+      Zone: "outside"
+
+- name: "Associate EIP to ENI: outside"
+  delegate_to: localhost
+  ec2_eip:
+    region: "{{ ec2_region }}"
+    device_id: "{{ r_ec2_eni_outside.interface.id }}"
+    private_ip_address: "{{ ec2_instance_interface.outside.private_ip_address }}"
+    in_vpc: true
+    release_on_disassociation: true
+    reuse_existing_ip_allowed: true
+  register: r_ec2_eip_outside
+
+- name: "Tag EIP: outside"
+  delegate_to: localhost
+  ec2_tag:
+    region: "{{ ec2_region }}"
+    resource: "{{ r_ec2_eip_outside.allocation_id }}"
+    tags:
+      Name: "{{ ec2_instance_name }}"
+      Environment: "{{ ec2_vpc_name }}"
+      Zone: "outside"
+
+- name: "Create ENI: inside"
+  delegate_to: localhost
+  ec2_eni:
+    region: "{{ ec2_region }}"
+    device_index: 2
+    subnet_id: "{{ r_ec2_vpc_subnet_inside.subnet.id }}"
+    security_groups: "{{ r_ec2_group.group_id }}"
+    private_ip_address: "{{ ec2_instance_interface.inside.private_ip_address }}"
+    delete_on_termination: true
+  register: r_ec2_eni_inside
+
+- name: "Tag ENI: inside"
+  delegate_to: localhost
+  ec2_tag:
+    region: "{{ ec2_region }}"
+    resource: "{{ r_ec2_eni_inside.interface.id }}"
+    tags:
+      Name: "{{ ec2_instance_name }}"
+      Environment: "{{ ec2_vpc_name }}"
+      Zone: "inside"
+
+- name: "Find AMI in Marketplace"
+  delegate_to: localhost
+  ec2_ami_facts:
+    region: "{{ ec2_region }}"
+    owners: "{{ ec2_ami.owners }}"
+    filters:
+      name: "{{ ec2_ami.name }}"
+      architecture: "{{ ec2_ami.architecture }}"
+  register: r_ec2_ami_facts
+
+- name: "Create Instance"
+  delegate_to: localhost
+  vars:
+    ec2_ami: "{{ r_ec2_ami_facts.images | selectattr('name', 'defined') | sort(attribute='creation_date') | last }}"
+  ec2_instance:
+    region: "{{ ec2_region }}"
+    instance_type: "{{ ec2_instance_type }}"
+    image_id: "{{ ec2_ami.image_id }}"
+    key_name: "{{ ec2_instance_key }}"
+    user_data: "{{ ec2_instance_user_data | default(omit) }}"
+    network:
+      interfaces:
+        - "{{ r_ec2_eni_mgmt.interface.id }}"
+        - "{{ r_ec2_eni_outside.interface.id }}"
+        - "{{ r_ec2_eni_inside.interface.id }}"
+    wait: true
+    tags:
+      Name: "{{ ec2_instance_name }}"
+      Environment: "{{ ec2_vpc_name }}"
+      Platform: "{{ ansible_network_os | default('network') }}"
+  register: ec2_instance
+
+- name: "Add instance to inventory"
+  delegate_to: localhost
+  changed_when: false
+  add_host:
+    hostname: "{{ ec2_instance_name }}"
+    ansible_host: "{{ r_ec2_eip_mgmt.public_ip }}"
+    groups:
+     - "tag_Name_{{ ec2_instance_name }}"
+     - "tag_Environment_{{ r_ec2_vpc_name }}"
+     - "tag_Platform_{{ ansible_network_os }}"
+
+- name: "Ready"
+  delegate_to: localhost
+  debug:
+    msg: "{{ ec2_instance_name }}: ssh {{ ansible_user }}@{{ ansible_host }} -i keychain/{{ ec2_vpc_name }}"

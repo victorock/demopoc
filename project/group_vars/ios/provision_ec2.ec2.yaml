@@ -1,0 +1,17 @@
+---
+ec2_instance_role: "network"
+ec2_instance_type: "t2.medium"
+
+ec2_ami:
+  name: "cisco-CSR*"
+  owners: 679593333241
+  architecture: "x86_64"
+  # BYOL
+  product_code: "5tiyrfb5tasxk9gmnab39b843"
+
+ec2_group: "{{ ec2_vpc_name }}"
+ec2_group_rules:
+  - proto: -1
+    from_port: -1
+    to_port: -1
+    cidr_ip: 0.0.0.0/0

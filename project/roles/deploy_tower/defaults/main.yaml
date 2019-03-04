@@ -1,0 +1,28 @@
+---
+pip_common_packages:
+  - "python-memcached"
+  - "psutil"
+  - "ansible-tower-cli"
+  - "ipaddress"
+  - "netaddr"
+
+pip_cloud_packages:
+  - "google-cloud"
+  - "azure"
+  - "apache-libcloud"
+  - "boto"
+  - "boto3"
+  - "passlib"
+
+pip_host_packages:
+  - "pywinrm"
+
+pip_network_packages:
+  - "f5-sdk"
+  - "bigsuds"
+  - "ncclient"
+  - "pandevice"
+  - "pan-python"
+  - "pyfgt"
+  - "pyfmg"
+  - "infoblox-client"

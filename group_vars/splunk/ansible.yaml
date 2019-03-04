@@ -1,3 +1,0 @@
----
-ansible_network_os: "splunk"
-ansible_user: "ec2-user"

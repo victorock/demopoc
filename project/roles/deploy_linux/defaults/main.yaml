@@ -1,0 +1,25 @@
+---
+linux_redhat_subscription: "{{ redhat_subscription | default(false) }}"
+linux_redhat_subscription_username: "{{ redhat_subscription_username | default(omit) }}"
+linux_redhat_subscription_password: "{{ redhat_subscription_password | default(omit) }}"
+linux_redhat_subscription_activationkey: "{{ redhat_subscription_activationkey | default(omit) }}"
+linux_redhat_subscription_org_id: "{{ redhat_subscription_org_id | default(omit) }}"
+
+linux_packages:
+  - ansible
+  - rh-amazon-rhui-client
+  - "@Development Tools"
+  - vim-minimal
+  - git
+  - wget
+  - NetworkManager
+  - NetworkManager-glib
+  - dbus
+
+linux_redhat_subscription_repos:
+  - rhel-7-server-extras-rpms
+  - rhel-7-server-optional-rpms
+
+linux_redhat_update_infrastructure_repos:
+  - rhui-REGION-rhel-server-extras
+  - rhui-REGION-rhel-server-optional

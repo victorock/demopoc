@@ -1,0 +1,21 @@
+---
+dependencies:
+# TODO: Fix "victorock.download" to support Darwin.
+  - role: "victorock.download"
+    autorun: true
+    when: ansible_system == "Linux"
+
+galaxy_info:
+  role_name: build
+  author: "Victor da Costa"
+  description: "Wrapper to Call build Roles"
+  license: GPLv3
+  min_ansible_version: 2.8
+  platforms:
+  - name: EL
+    versions:
+    - 7
+  galaxy_tags:
+    - automation
+    - system
+    - lab

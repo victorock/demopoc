@@ -1,0 +1,61 @@
+---
+- name: "Gather Instance facts"
+  delegate_to: localhost
+  ec2_instance_facts:
+    region: "{{ ec2_region }}"
+    filters:
+      "tag:Name": "{{ ec2_instance_name }}"
+      "tag:Environment": "{{ ec2_vpc_name }}"
+  register: r_ec2_instance_facts
+
+- name: "Terminate Instance"
+  delegate_to: localhost
+  ec2_instance:
+    region: "{{ ec2_region }}"
+    instance_ids: "{{ item.instance_id }}"
+    wait: true
+    state: "terminated"
+  loop: "{{ r_ec2_instance_facts.instances }}"
+  loop_control:
+    label: "instance: {{ item.tags.Name }} ({{ item.instance_id }})"
+
+- name: "Gather ENI facts"
+  delegate_to: localhost
+  ec2_eni_facts:
+    region: "{{ ec2_region }}"
+    filters:
+      "tag:Name": "{{ ec2_instance_name }}"
+      "tag:Environment": "{{ ec2_vpc_name }}"
+  register: r_ec2_eni_facts
+
+- name: "Destroy ENIs"
+  delegate_to: localhost
+  ec2_eni:
+    region: "{{ ec2_region }}"
+    eni_id: "{{ item.network_interface_id }}"
+    force_detach: yes
+    state: "absent"
+  loop: "{{ r_ec2_eni_facts.network_interfaces }}"
+  loop_control:
+    label: "eni: {{ item.tag_set.name }}, {{ item.tag_set.zone }} ({{ item.network_interface_id }}) "
+
+- name: "Gather EIP facts"
+  delegate_to: localhost
+  ec2_eip_facts:
+    region: "{{ ec2_region }}"
+    filters:
+      "tag:Name": "{{ ec2_instance_name }}"
+      "tag:Environment": "{{ ec2_vpc_name }}"
+  register: r_ec2_eip_facts
+
+- name: "Release instance EIPs"
+  delegate_to: localhost
+  ec2_eip:
+    region: "{{ ec2_region }}"
+    public_ip: "{{ item.public_ip }}"
+    in_vpc: true
+    release_on_disassociation: true
+    state: "absent"
+  loop: "{{ r_ec2_eip_facts.addresses }}"
+  loop_control:
+    label: "eip: {{ item.tags.Name }}, {{ item.tags.Zone }} ({{ item.public_ip }}) "

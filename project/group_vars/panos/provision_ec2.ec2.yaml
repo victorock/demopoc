@@ -1,0 +1,16 @@
+ec2_instance_role: "network"
+ec2_instance_type: "m4.xlarge"
+
+ec2_ami:
+  name: "PA-VM-*"
+  owners: "679593333241"
+  architecture: "x86_64"
+  # BYOL
+  product_code: "6njl1pau431dv1qxipg63mvah"
+  
+ec2_group: "{{ ec2_vpc_name }}"
+ec2_group_rules:
+  - proto: -1
+    from_port: -1
+    to_port: -1
+    cidr_ip: 0.0.0.0/0

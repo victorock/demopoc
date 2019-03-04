@@ -1,0 +1,15 @@
+ec2_instance_role: "network"
+ec2_instance_type: "c4.large"
+
+ec2_ami:
+  name: "FortiGate-*"
+  owners: "679593333241"
+  architecture: "x86_64"
+  product_code: "dlaioq277sglm5mw1y1dmeuqa"
+
+ec2_group: "{{ ec2_vpc_name }}"
+ec2_group_rules:
+  - proto: -1
+    from_port: -1
+    to_port: -1
+    cidr_ip: 0.0.0.0/0
