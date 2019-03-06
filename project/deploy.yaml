@@ -3,5 +3,6 @@
   hosts: "{{ applications | default('all') }}"
   vars:
     ansible_become: true
+    ansible_gather_facts: true
   roles:
     - role: "deploy"
