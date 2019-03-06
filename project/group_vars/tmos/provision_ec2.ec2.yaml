@@ -1,7 +1,7 @@
 ec2_instance_role: "network"
 ec2_instance_type: "t2.large"
 ec2_instance_user_data: |
-  admin_password: '{{ demobox_password }}'
+  admin_password: '{{ deploy_password }}'
 
 ec2_ami:
   name: "F5*"

@@ -38,10 +38,8 @@
 - name: "Disable Network Manager on outside interface"
   become: true
   template:
-    backup: yes
     dest: "/etc/NetworkManager/conf.d/outside-nic.conf"
     src: "etc/NetworkManager/conf.d/outside-nic.conf"
-  notify: reload_NetworkManager
 
 - name: "Ensure state of Network Manager service"
   become: true
@@ -54,7 +52,7 @@
 - name: "configure inside network interface"
   become: true
   vars:
-    ipv4_prefix: "{{ ec2_vpc_subnet_mgmt | ipaddr('prefix') }}"
+    ipv4_prefix: "{{ ec2_vpc_subnet_inside | ipaddr('prefix') }}"
   nmcli:
     ifname: "eth1"
     ip4: "{{ ec2_instance_interface.inside.private_ip_address }}/{{ ipv4_prefix }}"
