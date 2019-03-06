@@ -1,10 +1,7 @@
 ---
 dependencies:
   - role: "deploy_linux"
-    autorun: true
-
-  - role: "victorock.tower_setup"
-    autorun: true
+  - role: "victorock.tower"
 
 galaxy_info:
   role_name: deploy_tower

@@ -1,10 +1,4 @@
 ---
-- name: "Call provision role"
-  block:
-    - name: "{{ provision_provider }}"
-      include_role:
-        name: "{{ provision_provider }}"
-  rescue:
-    - name: "provision not implemented"
-      fail:
-        msg: "Provision {{ provision_provider }} is not implemented"
+- name: "Call provision_provider"
+  include_role:
+    name: "{{ provision_provider }}"

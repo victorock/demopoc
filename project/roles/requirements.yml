@@ -3,10 +3,16 @@
 # Only refer to content comming from galaxy
 #  NEVER specify the src (Default: galaxy).
 #  SHALL specify the version.
+- name: "victorock.tower"
+  version: v0.1b
 - name: "victorock.tower_config"
+  version: v0.1b
 - name: "victorock.tower_setup"
+  version: v0.1b
 - name: "victorock.tower_facts"
+  version: v0.1b
 - name: "victorock.download"
+  version: v0.1b
 - name: "victorock.paloalto_panos"
 - name: "ansible-network.network-engine"
 - name: "ansible-network.cisco_ios"

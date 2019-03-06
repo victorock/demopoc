@@ -1,0 +1,3 @@
+---
+- import_playbook: terminate.yaml
+- import_playbook: provision.yaml

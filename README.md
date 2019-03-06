@@ -266,6 +266,13 @@ Examples:
 - Example:
   > `ansible-runner --playbook teardown.yaml run .`  
 
+### Remain
+[`Remain`](project/remain.yaml): [`Teardown`](###Teardown) then `build`, `provision` and `deploy`.  
+
+### Reprovision
+[`Reprovision`](project/remain.yaml): [`Terminate`](###Terminate) then [`Provision`](###Provision).
+
+
 ## TODO
 deploy_\<application\> for the following:
 - ios

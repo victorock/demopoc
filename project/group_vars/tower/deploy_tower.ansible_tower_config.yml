@@ -3,7 +3,7 @@ tower_config:
   host: "localhost"
   username: "admin"
   password: "{{ deploy_password }}"
-  verify_ssl: false
+  verify_ssl: "false"
   format: json
 
 # Setting
@@ -63,7 +63,7 @@ tower_config:
           last_name: "Operations"
           superuser: false
           auditor: true
-# Teams
+      # Teams
       teams:
         - name: "infraops"
           description: "Infrastructure Operations"
@@ -98,7 +98,7 @@ tower_config:
           members:
             - name: "appops"
 
-# Projects
+      # Projects
       projects:
 ########################################################################
 #                  network-automation-linklight                        #
@@ -124,7 +124,7 @@ tower_config:
           scm_update_on_launch: false
           scm_url: "https://github.com/ansible/lightbulb"
 
-# Permissions
+      # Permissions
       permissions:
 
 ########################
@@ -234,10 +234,6 @@ tower_config:
 
         - team: "secops"
           role: "admin"
-          credential: "cloud-google-gce"
-
-        - team: "secops"
-          role: "admin"
           credential: "cloud-microsoft-azure"
 
         - team: "secops"
@@ -265,43 +261,36 @@ tower_config:
         - team: "secops"
           role: "admin"
           credential: "network-ios-ssh"
-          ssh_key_data: "keychain/{{ ec2_vpc_name }}"
 
 #### PANOS
         - team: "secops"
           role: "admin"
           credential: "network-panos-ssh"
-          ssh_key_data: "keychain/{{ ec2_vpc_name }}"
 
 #### TMOS
         - team: "secops"
           role: "admin"
           credential: "network-tmos-ssh"
-          ssh_key_data: "keychain/{{ ec2_vpc_name }}"
 
 #### NIOS
         - team: "secops"
           role: "admin"
           credential: "network-nios-ssh"
-          ssh_key_data: "keychain/{{ ec2_vpc_name }}"
 
 #### FORTIOS
         - team: "secops"
           role: "admin"
           credential: "network-fortios-ssh"
-          ssh_key_data: "keychain/{{ ec2_vpc_name }}"
 
 #### ASA
         - team: "secops"
           role: "admin"
           credential: "network-asa-ssh"
-          ssh_key_data: "keychain/{{ ec2_vpc_name }}"
 
 #### Linux
         - team: "secops"
           role: "admin"
           credential: "system-linux-ssh"
-          ssh_key_data: "keychain/{{ ec2_vpc_name }}"
 
 #### Windows
         - team: "secops"
@@ -369,7 +358,6 @@ tower_config:
           description: "Credential for ios"
           username: "changeme"
           password: "changeme"
-          ssh_key_data: "~/.ansible/vault/ssh/default"
 
         - name: "network-panos-ssh"
           kind: "ssh"
@@ -432,12 +420,6 @@ tower_config:
           description: "Credential for AWS"
           username: "changeme"
           password: "changeme"
-
-        - name: "cloud-google-gce"
-          kind: "gce"
-          description: "Credential for GCE"
-          username: "changeme"
-          project: "changeme"
 
         - name: "cloud-microsoft-azure"
           kind: "azure_rm"

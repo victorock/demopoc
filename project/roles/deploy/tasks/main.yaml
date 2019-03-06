@@ -1,10 +1,4 @@
 ---
-- name: "Call deploy role"
-  block:
-    - name: "{{ deploy_provider }}"
-      include_role:
-        name: "{{ deploy_provider }}"
-  rescue:
-    - name: "deploy not implemented"
-      fail:
-        msg: "Deploy {{ deploy_provider }} is not implemented"
+- name: "Call deploy_provider"
+  include_role:
+    name: "{{ deploy_provider }}"

@@ -1,4 +1,17 @@
 ---
+pip_venv_map:
+  - venv: "/var/lib/awx/venv/ansible-cloud-release"
+    packages: "{{ pip_cloud_packages }}"
+  - venv: "/var/lib/awx/venv/ansible-host-release"
+    packages: "{{ pip_host_packages }}"
+  - venv: "/var/lib/awx/venv/ansible-network-release"
+    packages: "{{ pip_network_packages }}"
+
+pip_venvs:
+ - "{{ pip_venv_cloud }}"
+ - "{{ pip_venv_host }}"
+ - "{{ pip_venv_network }}"
+
 pip_common_packages:
   - "python-memcached"
   - "psutil"
