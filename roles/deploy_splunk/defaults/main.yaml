@@ -1,0 +1,3 @@
+---
+deploy_splunk_homedir: "/opt/splunk"
+deploy_splunk_user: "splunk"

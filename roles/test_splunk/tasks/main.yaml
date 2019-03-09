@@ -1,0 +1,11 @@
+---
+- name: "Test splunk"
+  uri:
+    url: "https://localhost:8089/services/auth/login"
+    method: "POST"
+    body_format: "form-urlencoded"
+    body:
+      username: "admin"
+      password: "{{ deploy_password }}"
+    status_code: 200
+    validate_certs: false

@@ -1,0 +1,28 @@
+---
+- name: "Create .ansible/tmp"
+  become: true
+  become_user: "{{ deploy_splunk_user }}"
+  file:
+    path: ".ansible/tmp"
+    state: "directory"
+
+- name: "Configure admin password"
+  become: true
+  become_user: "{{ deploy_splunk_user }}"
+  vars:
+    hashed_password: "{{ deploy_password | password_hash('sha512', 65534 | random(seed=inventory_hostname) | string) }}"
+  lineinfile:
+    path: "{{ deploy_splunk_homedir }}/etc/passwd"
+    regexp: "^:admin"
+    line: ":admin:{{ hashed_password }}::Administrator:admin:changeme@example.com::"
+  notify: restart_splunk
+
+- name: "Disable password change on login"
+  become: true
+  become_user: "{{ deploy_splunk_user }}"
+  file:
+    path: "{{ deploy_splunk_homedir }}/etc/.ui_login"
+    state: "touch"
+
+- name: "Flush Handlers"
+  meta: flush_handlers

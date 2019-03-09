@@ -1,7 +1,9 @@
 plugin: aws_ec2
 strict: False
+regions:
+  - "{{ ec2_region }}"
 filters:
-  tag:Environment: "demobox"
+  tag:Environment: "{{ ec2_vpc_name }}"
 hostnames:
   - tag:Name
   - dns-name

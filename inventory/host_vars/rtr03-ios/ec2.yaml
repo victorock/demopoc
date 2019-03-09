@@ -1,0 +1,11 @@
+---
+ec2_instance_interface:
+  mgmt:
+    name: "mgmt"
+    private_ip_address: "{{ ec2_vpc_subnet_mgmt | ipaddr(145) | ipaddr('address') }}"
+  outside:
+    name: "outside"
+    private_ip_address: "{{ ec2_vpc_subnet_outside | ipaddr(148) | ipaddr('address') }}"
+  inside:
+    name: "inside"
+    private_ip_address: "{{ ec2_vpc_subnet_inside | ipaddr(148) | ipaddr('address') }}"

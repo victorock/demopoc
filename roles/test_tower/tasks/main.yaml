@@ -1,0 +1,11 @@
+---
+- name: "Test tower"
+  uri:
+    url: "https://localhost/api/v2/ping"
+    method: "GET"
+    body_format: "json"
+    force_basic_auth: true
+    username: "admin"
+    password: "{{ deploy_password }}"
+    status_code: 200
+    validate_certs: false

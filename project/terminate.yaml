@@ -1,9 +1,0 @@
----
-- name: "Unprovision"
-  hosts: "{{ applications | default('all') }}"
-  vars:
-    ansible_connection: "local"
-    ansible_gather_facts: false
-  roles:
-    - role: "provision"
-      provision_state: "terminated"

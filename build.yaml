@@ -1,0 +1,12 @@
+---
+- name: "Build"
+  hosts: "{{ environments }}"
+  vars:
+    ansible_connection: "local"
+    ansible_gather_facts: true
+  vars_files:
+    - "config/environment.yaml"
+  roles:
+    - role: "build"
+      
+

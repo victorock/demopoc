@@ -1,0 +1,11 @@
+---
+- name: "Terminate"
+  hosts: "{{ environments }}"
+  vars:
+    ansible_connection: "local"
+    ansible_gather_facts: false
+  vars_files:
+    - "config/environment.yaml"
+  roles:
+    - role: "provision"
+      provision_state: "terminated"

@@ -1,0 +1,8 @@
+---
+- name: "Restart splunk"
+  become: true
+  listen: restart_splunk
+  service:
+    name: "splunk"
+    state: "restarted"
+

@@ -1,0 +1,79 @@
+---
+- name: "Ensure Red Hat Update Infrastructure repositories"
+  become: true
+  ini_file:
+    path: "/etc/yum.repos.d/redhat-rhui.repo"
+    section: "{{ item }}"
+    option: "enabled"
+    value: "1"
+  loop: "{{ linux_redhat_update_infrastructure_repos }}"
+
+- name: "Red Hat Subscription"
+  block:
+    - name: "Ensure registration"
+      become: true
+      redhat_subscription:
+        username: "{{ linux_redhat_subscription_username }}"
+        password: "{{ linux_redhat_subscription_password }}"
+        activationkey: "{{ linux_redhat_subscription_activationkey }}"
+        org_id: "{{ linux_redhat_subscription_org_id }}"
+        auto_attach: "true"
+        state: "present"
+
+    - name: "Ensure state of repositories"
+      become: true
+      rhsm_repository:
+        name: "{{ linux_redhat_subscription_repos }}"
+        state: "present"
+  when: linux_redhat_subscription|bool
+
+- name: "Configure additional repositories"
+  become: true
+  yum_repository:
+    name: "{{ yum_repo.name }}"
+    enabled: "{{ yum_repo.enabled | default(omit) }}"
+    description: "{{ yum_repo.description | default(omit) }}"
+    baseurl: "{{ yum_repo.baseurl }}"
+    state: "{{ yum_repo.state | default(omit) }}"
+    gpgcheck: "{{ yum_repo.gpgcheck | default(omit) }}"
+  loop: "{{ linux_redhat_additional_repos }}"
+  loop_control:
+    loop_var: yum_repo
+    label: "repo: {{ yum_repo.name }}"
+
+- name: "yum: Install baseline packages"
+  become: true
+  yum:
+    name: "{{ linux_packages }}"
+    update_cache: yes
+    disable_gpg_check: true
+    state: "latest"
+
+# TODO: Use find in templates folder and apply templates recursively in /
+- name: "Disable Network Manager on outside interface"
+  become: true
+  template:
+    dest: "/etc/NetworkManager/conf.d/outside-nic.conf"
+    src: "etc/NetworkManager/conf.d/outside-nic.conf"
+
+- name: "Ensure state of Network Manager service"
+  become: true
+  service:
+    name: "NetworkManager"
+    state: "started"
+    enabled: "yes"
+
+# TODO: Use cloud agnostic variables??
+- name: "configure inside network interface"
+  become: true
+  vars:
+    ipv4_prefix: "{{ ec2_vpc_subnet_inside | ipaddr('prefix') }}"
+  nmcli:
+    ifname: "eth1"
+    ip4: "{{ ec2_instance_interface.inside.private_ip_address }}/{{ ipv4_prefix }}"
+    conn_name: "inside"
+    type: "ethernet"
+    state: "present"
+
+- name: "Flush Handlers"
+  meta: flush_handlers
