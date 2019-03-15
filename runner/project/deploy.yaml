@@ -4,8 +4,6 @@
   vars:
     ansible_become: true
     ansible_gather_facts: true
-  vars_files:
-    - "config/environment.yaml"
   roles:
     - role: "deploy"
     - role: "test"

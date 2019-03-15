@@ -110,183 +110,107 @@ Request `Red Hat Ansible Tower` subscription [here](https://www.ansible.com/lice
   - Fortigate (**required**): Click [_Continue to Subscribe_](https://aws.amazon.com/marketplace/pp/B00PCZSWDA)
 
 ## Howto
-How to customize my `environment`?
-> - Edit the file [`config/environment.yaml`](config/environment.yaml).  
-```YAML
----
-# EC2 Region: https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/using-regions-availability-zones.html#concepts-available-regions
-ec2_region: "eu-central-1"
+How to create my own `topology`?
+> - Copy the file [`topologies/default.yaml`](topologies/environment.yaml) to `topologies/mytopology.yaml`.  
+> - Edit the file [`topologies/mytopology.yaml`](topologies/mytopology.yaml).  
+> - Customize the subnets, vpcs, regions...  
+> - Pick and choose the list of nodes, vendors, technologies and put them in `environments`.  
 
-# VPC Name
-ec2_vpc_name: "demobox"
-
-# Network CIDR
-ec2_vpc_cidr: "10.1.0.0/16"
-
-# Default password for deployers to configure appliances (Useful for interaction through the webinterface).
-#  NOTE: The ssh-key located in project/keychain/<ec2_vpc_name> is injected by the cloud provider.
-deploy_password: "demobox123!"
-
-# Environments:
-#  Leave only the environments that you want to Build, Provision and Deploy.
-environments:
-  - linux
-  - nios
-  - tower
-  - splunk
-  - fortios
-  - asa
-  - panos
-  - windows
-  - tmos
-```
 How to define my own ssh-keys?  
-_NOTE: ssh-keys are generated automatically_
+_NOTE: if missing, ssh-keys are generated automatically_
 > - Save the **public ssh_key** in `keychain/<ec2_vpc_name>`.
-> - Replace the **private ssh_key** in `env/ssh_key`.  
+> - Replace the **private ssh_key** in `keychain/<ec2_vpc_name>`.  
 
-How to **`build`, `provision`** and **`deploy` all environments** in the topology:
-> Foreground:  
-> - `ansible-playbook main.yaml `  
-> Background:
-> - `ansible-playbook main.yaml `
+How to **`build`, `provision`** and **`deploy` all nodes**:
+> - `./main.yaml`  
 
 How to choose `specific environments`?
 > In order to **`build`, `provision`** and **`deploy specific environments`** in the topology:  
->  - Just use the standard `ansible-runner` command-line argument `--limit`:  
->    - `ansible-playbook main.yaml --limit tower,linux `  
+> - `./main.yaml -e topology=cisco_ios_multisite_site1.yaml`  
+> - `./main.yaml -e topology=cisco_ios_multisite_site2.yaml`  
+> - `./main.yaml -e topology=cisco_ios_multisite_site3.yaml`  
 
-_What happens when the previous command ends?_  
-> It will **`build`, `provision` and `deploy`** `Red Hat Enterprise Linux` and `Red Hat Ansible Tower`.  
+_What are the overall steps happening in background?_
+> 1. [`Build`](##Build): Runs locally, calling the role [`build`](runner/roles/build/).
+> 2. [`Provision`](##Provision): Runs locally, calling the role [`provision`](runner/roles/provision).
+> 3. [`Deploy`](##Deploy): Runs against the provisioned device, calling the role [`deploy`](runner/roles/deploy).
 
-_What are the overall steps?_
-> 1. [`Build`](##Build): Runs locally, calling the role [`build`](roles/build/).
-> 2. [`Provision`](##Provision): Runs locally, calling the role [`provision`](roles/provision).
-> 3. [`Deploy`](##Deploy): Runs against the provisioned device, calling the role [`deploy`](roles/deploy).
-
-_What happens behind the scenes? What is the logical path of the playbook `main.yaml`?_
-> - _[`main.yaml`](main.yaml):_
->    - _[`build.yaml`](build.yaml):_
+_What happens behind the scenes? What is the logical path of the topology `main.yaml`?_
+> - _[`main.yaml`](runner/project/main.yaml):_
+>    - _[`build.yaml`](runner/project/build.yaml):_
 >      - _roles:_
->        - _[`build`](roles/build):_
+>        - _[`build`](runner/roles/build):_
 >          - _[`download`](https://galaxy.ansible.com/victorock/download)_
->    - _[`provision.yaml`](provision.yaml):_
+>    - _[`provision.yaml`](runner/projectprovision.yaml):_
 >      - _roles:_
->        - _[`provision`](roles/provision):_
->          - _[`provision_ec2`](roles/provision_ec2):_
->              - _[`inventory/group_vars/all/ec2.yaml`](inventory/group_vars/all/ec2.yaml)_
->              - _[`inventory/group_vars/tower/ec2.yaml`](inventory/group_vars/tower/ec2.yaml)_
->              - _[`inventory/group_vars/linux/ec2.yaml`](inventory/group_vars/linux/ec2.yaml)_
->              - _[`host_vars/host01-tower/ec2.yaml`](inventory/group_vars/host01-tower/ec2.yaml)_
->              - _[`host_vars/host01-linux/ec2.yaml`](inventory/group_vars/host01-linux/ec2.yaml)_
->    - _[`deploy.yaml`](roles/deploy):_
+>        - _[`provision`](runner/roles/provision):_
+>          - _[`provision_ec2`](runner/roles/provision_ec2):_
+>              - _[`inventory/group_vars/all/ec2.yaml`](runner/inventory/group_vars/all/ec2.yaml)_
+>              - _[`inventory/group_vars/tower/ec2.yaml`](runner/inventory/group_vars/tower/ec2.yaml)_
+>              - _[`inventory/group_vars/linux/ec2.yaml`](runner/inventory/group_vars/linux/ec2.yaml)_
+>              - _[`host_vars/host01-tower/ec2.yaml`](runner/inventory/group_vars/host01-tower/ec2.yaml)_
+>              - _[`host_vars/host01-linux/ec2.yaml`](runner/inventory/group_vars/host01-linux/ec2.yaml)_
+>    - _[`deploy.yaml`](runner/roles/deploy):_
 >      - _roles:_
->        - _[`deploy_tower`](roles/deploy_tower):_ 
->          - _[`deploy_linux`](roles/deploy_linux):_
+>        - _[`deploy_tower`](runner/roles/deploy_tower):_ 
+>          - _[`deploy_linux`](runner/roles/deploy_linux):_
 >              - _network configuration_
 >              - _baseline packages_
 >              - _repositories (redhat-rhui)_
 >              - _subscription (optional)_
 >          - _[`tower_setup`](https://galaxy.ansible.com/victorock/tower_setup):_
->            - _[`inventory/group_vars/tower/ansible_tower_setup.yaml`](inventory/group_vars/tower/ansible_tower_setup.yaml)_ 
+>            - _[`inventory/group_vars/tower/ansible_tower_setup.yaml`](runner/inventory/group_vars/tower/ansible_tower_setup.yaml)_ 
 >          - _[`tower_configure`](https://galaxy.ansible.com/victorock/tower_config):_
->            - _[`inventory/group_vars/tower/ansible_tower_config.yaml`](inventory/group_vars/tower/ansible_tower_config.yaml)_ 
+>            - _[`inventory/group_vars/tower/ansible_tower_config.yaml`](runner/inventory/group_vars/tower/ansible_tower_config.yaml)_ 
 >          - _[`tower_facts`](https://galaxy.ansible.com/victorock/tower_facts)_
->    - _[`test.yaml`](roles/test):_
+>    - _[`test.yaml`](runner/roles/test):_
 >      - _roles:_
->        - _[`test_tower`](roles/test_tower):_  
+>        - _[`test_tower`](runner/roles/test_tower):_  
 >          - _application tests_
 
 
 ### Build
-[Build](roles/build) **environment's** resources **locally**:
+[Build](runner/project/roles/build) **environment's** resources **locally**:
 - `download files...`
 - `create files...`
 - `compile code...`
 - `etc...`
 
 ### Provision 
-[`Provision`](provision.yaml) the following [environment's](####Environments) resources in:  
+[`Provision`](runner/project/provision.yaml) the following [environment's](####Environments) resources in:  
 - [Amazon Web Services](https://aws.amazon.com):
-  - [`vpc`](roles/provision_ec2/present/)
-  - [`subnets`](roles/provision_ec2/present)
-  - [`gateways`](roles/provision_ec2/present/)
-  - [`enis`](roles/provision_ec2/present/)
-  - [`eips`](roles/provision_ec2/present/)
-  - [`instances`](roles/provision_ec2/present/)
-
-- Examples:
-  - `Cisco ASAv` and `Red Hat Enterprise Linux`:  
-    > `ansible-playbook provision.yaml --limit asa,linux `  
-  - `F5 BigIP`, `Infoblox IPAM` and `Red Hat Enterprise Linux`:  
-    > `ansible-playbook provision.yaml --limit tmos,linux,nios `  
-  - `PaloAlto NGFW` and `Red Hat Enterprise Linux`:  
-    > `ansible-playbook provision.yaml --limit panos,linux `  
-  - `Red Hat Ansible Tower` and `Splunk Insights for Infrastructure`:  
-    > `ansible-playbook provision.yaml --limit tower,splunk `  
-  - **All** `Routers`:
-    > `ansible-playbook provision.yaml --limit router `  
-  - **All** `Firewalls`, `Load Balancers` and `Hosts`:
-    > `ansible-playbook provision.yaml --limit firewall,loadbalance,host `  
+  - [`vpc`](runner/roles/provision_ec2/present/)
+  - [`subnets`](runner/roles/provision_ec2/present)
+  - [`gateways`](runner/roles/provision_ec2/present/)
+  - [`enis`](runner/roles/provision_ec2/present/)
+  - [`eips`](runner/roles/provision_ec2/present/)
+  - [`instances`](runner/roles/provision_ec2/present/)  
 
 ### Deploy 
-[Deploy](deploy.yaml) the following [**environments**](####Environments).
-
-Examples:
-  - `Cisco ASAv` and `Red Hat Enterprise Linux`:  
-    > `ansible-playbook deploy.yaml --limit asa,linux `  
-  - `Cisco CSR` and `Red Hat Enterprise Linux`:  
-    > `ansible-playbook deploy.yaml --limit ios,linux `  
-  - `F5 BigIP`, `Infoblox IPAM` and `Red Hat Enterprise Linux`:  
-    > `ansible-playbook deploy.yaml --limit tmos,linux,nios `  
-  - `Palo Alto NGFW` and `Red Hat Enterprise Linux`:  
-    > `ansible-playbook deploy.yaml --limit panos,linux `  
-  - `Fortinet FortiGate` and `Red Hat Enterprise Linux`:  
-    > `ansible-playbook deploy.yaml --limit fortios,linux `  
-  - `Red Hat Ansible Tower` and `Splunk Insights for Infrastructure`:  
-    > `ansible-playbook deploy.yaml --limit tower,splunk `  
-  - **All** `Firewalls`:
-    > `ansible-playbook provision.yaml --limit firewall `  
-  - **All** `Firewalls` and `Load Balancers`:
-    > `ansible-playbook provision.yaml --limit firewall,loadbalance `  
+[Deploy](runner/project/deploy.yaml) the following [**environments**](####Environments).
 
 ### Unprovision
-[`Unprovision`](unprovision.yaml) the following [environment's](####Environments) resources in:  
+[`Unprovision`](runner/project/unprovision.yaml) the following [environment's](####Environments) resources in:  
 - [Amazon Web Services](https://aws.amazon.com):
-  - [`enis`](roles/provision_ec2/terminated/)
-  - [`eips`](roles/provision_ec2/terminated/)
-  - [`instances`](roles/provision_ec2/terminated/)  
-
-Examples:  
-- `Cisco ASAv` and `Red Hat Enterprise Linux`:  
-  > `ansible-playbook unprovision.yaml --limit asa,linux `  
-- `Cisco CSR` and `Red Hat Enterprise Linux`:  
-  > `ansible-playbook unprovision.yaml --limit ios,linux `  
-- `F5 BigIP`, `Infoblox IPAM` and `Red Hat Enterprise Linux`:  
-  > `ansible-playbook unprovision.yaml --limit tmos,linux,nios `  
-- `Palo Alto NGFW` and `Red Hat Enterprise Linux`:  
-  > `ansible-playbook unprovision.yaml --limit panos,linux `  
-- `Red Hat Ansible Tower` and `Splunk Insights for Infrastructure`:  
-  > `ansible-playbook unprovision.yaml --limit tower,splunk `  
+  - [`enis`](runner/roles/provision_ec2/terminated/)
+  - [`eips`](runner/roles/provision_ec2/terminated/)
+  - [`instances`](runner/roles/provision_ec2/terminated/)  
 
 ###  Teardown
-[`Teardown`](teardown.yaml) the following [environment's](####Environments) resources in:  
+[`Teardown`](runner/project/teardown.yaml) the following [environment's](####Environments) resources in:  
 - [Amazon Web Services](https://aws.amazon.com):
-  - [`vpc`](roles/provision_ec2/absent/)
-  - [`subnets`](roles/provision_ec2/absent)
-  - [`gateways`](roles/provision_ec2/absent/)
-  - [`enis`](roles/provision_ec2/absent/)
-  - [`eips`](roles/provision_ec2/absent/)
-  - [`instances`](roles/provision_ec2/absent/)  
-
-- Example:
-  > `ansible-playbook teardown.yaml `  
+  - [`vpc`](runner/roles/provision_ec2/absent/)
+  - [`subnets`](runner/roles/provision_ec2/absent)
+  - [`gateways`](runner/roles/provision_ec2/absent/)
+  - [`enis`](runner/roles/provision_ec2/absent/)
+  - [`eips`](runner/roles/provision_ec2/absent/)
+  - [`instances`](runner/roles/provision_ec2/absent/)  
 
 ### Remain
-[`Remain`](remain.yaml): [`Teardown`](###Teardown) then `build`, `provision` and `deploy`.  
+[`Remain`](runner/project/remain.yaml): [`Teardown`](###Teardown) then `build`, `provision` and `deploy`.  
 
 ### Reprovision
-[`Reprovision`](remain.yaml): [`Terminate`](###Terminate) then [`Provision`](###Provision).
+[`Reprovision`](runner/project/remain.yaml): [`Terminate`](###Terminate) then [`Provision`](###Provision).
 
 
 ## TODO

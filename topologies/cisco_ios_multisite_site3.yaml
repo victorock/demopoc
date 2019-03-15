@@ -1,26 +1,19 @@
 ---
 # EC2 Region: https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/using-regions-availability-zones.html#concepts-available-regions
-ec2_region: "eu-central-1"
+ec2_region: "eu-north-1"
 
 # VPC Name
-ec2_vpc_name: "refactor"
+ec2_vpc_name: "demobox-multisite-site3"
 
 # Network CIDR
-ec2_vpc_cidr: "10.1.0.0/16"
+ec2_vpc_cidr: "10.3.0.0/16"
 
 # Default password for deployers to configure appliances (Useful for interaction through the webinterface).
-#  NOTE: The ssh-key located in project/keychain/<ec2_vpc_name> is injected by the cloud provider.
+#  NOTE: The ssh-key located in keychain/<ec2_vpc_name>.pub is injected by the cloud provider.
 deploy_password: "demobox123!"
 
 # Environments:
-#  Leave only the environments that you want to Build, Provision and Deploy.
+#  Leave only the environments that you want in your topology.
 environments:
   - linux
-  - nios
-  - tower
-  - splunk
-  - fortios
-  - asa
-  - panos
-  - windows
-  - tmos
+  - rtr03-ios

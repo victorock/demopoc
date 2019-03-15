@@ -1,0 +1,5 @@
+---
+runner_playbook: "main.yaml"
+runner_action: "start"
+runner_private_data_dir: "runner"
+runner_rotate_artifacts: "0"

@@ -96,6 +96,7 @@
   register: r_ec2_instance
 
 - name: "Add instance to inventory"
+  delegate_to: localhost
   changed_when: false
   add_host:
     hostname: "{{ ec2_instance_name }}"
@@ -106,6 +107,5 @@
       - "tag_Platform_{{ ansible_network_os }}"
 
 - name: "Ready"
-  delegate_to: localhost
   debug:
     msg: "{{ ec2_instance_name }}: ssh {{ ansible_user }}@{{ ansible_host }} -i keychain/{{ ec2_vpc_name }}"

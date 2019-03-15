@@ -1,0 +1,2 @@
+idle_timeout: 1200
+job_timeout: 3600

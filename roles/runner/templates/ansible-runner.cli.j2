@@ -1,0 +1,4 @@
+ansible-runner \
+  --playbook {{ runner_playbook | quote }} \
+  --rotate-artifacts {{ runner_rotate_artifacts | quote }} \
+  {{ runner_action | quote }} {{ runner_private_data_dir | quote }}

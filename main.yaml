@@ -1,4 +1,10 @@
+#!/usr/bin/env ansible-playbook
 ---
-- import_playbook: build.yaml
-- import_playbook: provision.yaml
-- import_playbook: deploy.yaml
+- name: "Demopoc"
+  hosts: localhost
+  connection: local
+  gather_facts: no
+  vars_files:
+    - "topologies/{{ topology | default('default') }}.yaml"
+  roles:
+    - role: runner
