@@ -232,7 +232,8 @@ What the [`Provision`](runner/project/provision.yaml) playbook does ?
 #### Deploy
 What the [`Deploy`](runner/project/deploy.yaml) playbook does ?  
 > [`Deploy`](runner/project/deploy.yaml) the [**environments**](####Environments).  
-> For each environment the role `deploy_<environment>` shall exist to perform environment specific tasks, as per examples:
+> For each environment the role `deploy_<environment>` shall exist to perform environment specific tasks.
+> Follow below roles in charge of environment specific deployments:  
 >   - [`deploy_linux`](runner/projet/roles/deploy_linux)
 >   - [`deploy_tower`](runner/projet/roles/deploy_tower)
 >   - [`deploy_splunk`](runner/projet/roles/deploy_splunk)
@@ -240,26 +241,26 @@ What the [`Deploy`](runner/project/deploy.yaml) playbook does ?
 
 #### Unprovision
 What the [`Unprovision`](runner/project/unprovision.yaml) playbook does ?  
-[`Unprovision`](runner/project/unprovision.yaml) the following [environment's](####Environments) resources in:  
-- [Amazon Web Services](https://aws.amazon.com):
-  - [`enis`](runner/roles/provision_ec2/terminated/)
-  - [`eips`](runner/roles/provision_ec2/terminated/)
-  - [`instances`](runner/roles/provision_ec2/terminated/)  
+> [`Unprovision`](runner/project/unprovision.yaml) the following [environment's](####Environments) resources:  
+> - [Amazon Web Services](https://aws.amazon.com):
+>   - [`enis`](runner/roles/provision_ec2/terminated/)
+>   - [`eips`](runner/roles/provision_ec2/terminated/)
+>   - [`instances`](runner/roles/provision_ec2/terminated/)  
 
 #### Teardown
 What the [`Teardown`](runner/project/teardown.yaml) playbook does ?  
-[`Teardown`](runner/project/teardown.yaml) the following [environment's](####Environments) resources in:  
-- [Amazon Web Services](https://aws.amazon.com):
-  - [`vpc`](runner/roles/provision_ec2/absent/)
-  - [`subnets`](runner/roles/provision_ec2/absent)
-  - [`gateways`](runner/roles/provision_ec2/absent/)
-  - [`enis`](runner/roles/provision_ec2/absent/)
-  - [`eips`](runner/roles/provision_ec2/absent/)
-  - [`instances`](runner/roles/provision_ec2/absent/)  
+> [`Teardown`](runner/project/teardown.yaml) the following [environment's](####Environments) resources:  
+> - [Amazon Web Services](https://aws.amazon.com):
+>   - [`vpc`](runner/roles/provision_ec2/absent/)
+>   - [`subnets`](runner/roles/provision_ec2/absent)
+>   - [`gateways`](runner/roles/provision_ec2/absent/)
+>   - [`enis`](runner/roles/provision_ec2/absent/)
+>   - [`eips`](runner/roles/provision_ec2/absent/)
+>   - [`instances`](runner/roles/provision_ec2/absent/)  
 
 #### Reprovision
 What the [`Reprovision`](runner/project/remain.yaml) playbook does ?  
-[`Reprovision`](runner/project/remain.yaml): [`Terminate`](###Terminate) then [`Provision`](###Provision).  
+> [`Terminate`](###Terminate) then [`Provision`](###Provision).  
 
 ## TODO
 deploy_\<environment\> for the following:
