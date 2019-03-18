@@ -1,7 +1,7 @@
 ---
 - name: "Generate extravars"
-  copy:
-    src: "topologies/{{ topology | default('default') }}.yaml"
+  template:
+    src: "extravars.j2"
     dest: "{{ runner_private_data_dir }}/env/extravars"
 
 - name: "Generate inventory configuration for ec2"

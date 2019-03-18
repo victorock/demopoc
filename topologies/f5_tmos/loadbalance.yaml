@@ -3,7 +3,7 @@
 ec2_region: "eu-central-1"
 
 # VPC Name
-ec2_vpc_name: "demobox-tower-nios-ios"
+ec2_vpc_name: "f5_tmos.loadbalance"
 
 # Network CIDR
 ec2_vpc_cidr: "10.1.0.0/16"
@@ -16,6 +16,5 @@ deploy_password: "demobox123!"
 #  Leave only the environments that you want in your topology.
 environments:
   - tower
-  - nios
-  - rtr01-ios
-  - rtr03-ios
+  - linux
+  - tmos

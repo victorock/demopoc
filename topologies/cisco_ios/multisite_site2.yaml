@@ -1,12 +1,12 @@
 ---
 # EC2 Region: https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/using-regions-availability-zones.html#concepts-available-regions
-ec2_region: "eu-north-1"
+ec2_region: "eu-west-3"
 
 # VPC Name
-ec2_vpc_name: "demobox-multisite-site3"
+ec2_vpc_name: "cisco_ios.multisite_site2"
 
 # Network CIDR
-ec2_vpc_cidr: "10.3.0.0/16"
+ec2_vpc_cidr: "10.2.0.0/16"
 
 # Default password for deployers to configure appliances (Useful for interaction through the webinterface).
 #  NOTE: The ssh-key located in keychain/<ec2_vpc_name>.pub is injected by the cloud provider.
@@ -16,4 +16,4 @@ deploy_password: "demobox123!"
 #  Leave only the environments that you want in your topology.
 environments:
   - linux
-  - rtr03-ios
+  - rtr02-ios

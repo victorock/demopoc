@@ -3,7 +3,7 @@
 ec2_region: "eu-central-1"
 
 # VPC Name
-ec2_vpc_name: "demobox-dmvpn-site1"
+ec2_vpc_name: "splunk_es.logging"
 
 # Network CIDR
 ec2_vpc_cidr: "10.1.0.0/16"
@@ -16,4 +16,5 @@ deploy_password: "demobox123!"
 #  Leave only the environments that you want in your topology.
 environments:
   - tower
-  - rtr01-ios
+  - linux
+  - splunk

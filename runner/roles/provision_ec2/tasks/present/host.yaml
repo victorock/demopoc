@@ -96,7 +96,6 @@
   register: r_ec2_instance
 
 - name: "Add instance to inventory"
-  delegate_to: localhost
   changed_when: false
   add_host:
     hostname: "{{ ec2_instance_name }}"
@@ -105,6 +104,10 @@
       - "tag_Name_{{ ec2_instance_name }}"
       - "tag_Environment_{{ ec2_vpc_name }}"
       - "tag_Platform_{{ ansible_network_os }}"
+
+- name: "Refresh inventory"
+  changed_when: false
+  meta: refresh_inventory
 
 - name: "Ready"
   debug:

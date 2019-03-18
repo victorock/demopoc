@@ -111,8 +111,9 @@ Request `Red Hat Ansible Tower` subscription [here](https://www.ansible.com/lice
 
 ## Howto
 How to create my own `topology`?
-> - Copy the file [`topologies/default.yaml`](topologies/environment.yaml) to `topologies/mytopology.yaml`.  
-> - Edit the file [`topologies/mytopology.yaml`](topologies/mytopology.yaml).  
+> - Create a directory for your topology: `mkdir topologies/mytopology`.  
+> - Copy the file [`topologies/default.yaml`](topologies/environment.yaml) to `topologies/mytopology/scenario.yaml`.  
+> - Edit the file [`topologies/mytopology.yaml`](topologies/mytopology/scenario.yaml).  
 > - Customize the subnets, vpcs, regions...  
 > - Pick and choose the list of nodes, vendors, technologies and put them in `environments`.  
 
@@ -122,13 +123,13 @@ _NOTE: if missing, ssh-keys are generated automatically_
 > - Replace the **private ssh_key** in `keychain/<ec2_vpc_name>`.  
 
 How to **`build`, `provision`** and **`deploy` all nodes**:
-> - `./main.yaml`  
+> - `./main.yaml -e @topologies/default.yaml`  
 
-How to choose `specific environments`?
+How to choose `specific topologies`?
 > In order to **`build`, `provision`** and **`deploy specific environments`** in the topology:  
-> - `./main.yaml -e topology=cisco_ios_multisite_site1.yaml`  
-> - `./main.yaml -e topology=cisco_ios_multisite_site2.yaml`  
-> - `./main.yaml -e topology=cisco_ios_multisite_site3.yaml`  
+> - `./main.yaml -e @topologies/cisco_ios/multisite_site1.yaml`  
+> - `./main.yaml -e @topologies/cisco_ios/multisite_site2.yaml`  
+> - `./main.yaml -e @topologies/cisco_ios/multisite_site3.yaml`  
 
 _What are the overall steps happening in background?_
 > 1. [`Build`](##Build): Runs locally, calling the role [`build`](runner/roles/build/).
