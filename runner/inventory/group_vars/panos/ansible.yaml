@@ -1,4 +1,6 @@
 ---
+ansible_user: "admin"
+ansible_password: "{{ deploy_password }}"
 ansible_network_os: "panos"
 ansible_network_provider: "victorock.paloalto_panos"
 ansible_connection: "local"

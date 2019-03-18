@@ -1,0 +1,20 @@
+---
+provider: "{{ ansible_provider }}"
+
+deploy_panos_zones:
+  - name: "untrust"
+    mode: "layer3"
+    interfaces:
+      - "ethernet1/1"
+  - name: "trust"
+    mode: "layer3"
+    interfaces:
+      - "ethernet1/2"
+
+deploy_panos_interfaces:
+  - name: "ethernet1/1"
+    zone_name: "unstrust"
+    create_default_route: true
+  - name: "ethernet1/2"
+    zone_name: "trust"
+    create_default_route: false
