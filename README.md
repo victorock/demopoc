@@ -79,8 +79,6 @@ Request `Red Hat Ansible Tower` subscription [here](https://www.ansible.com/lice
   - **Save** the _`license`_ **file** in _`licenses/tower`_.
 
 ### Infoblox
-**The Infoblox AMI is only accessible through the `inside` interface (LAN1).**  
-  _NOTE: This is an limitation of Infoblox's image_  
 **Accept** the following subscriptions:
   - NIOS CP (**required**): Click [_Continue to Subscribe_](https://aws.amazon.com/marketplace/pp/B0182WYGRA)
   - NIOS TE (_optional_): Click [_Continue to Subscribe_](https://aws.amazon.com/marketplace/pp/B0182WYFQC)
@@ -116,10 +114,11 @@ How to create my own `topology`?
 > - Edit the file [`topologies/mytopology.yaml`](topologies/mytopology/scenario.yaml).  
 > - Customize the subnets, vpcs, regions...  
 > - Pick and choose the list of nodes, vendors, technologies and put them in `environments`.  
+> - Run `./main.yaml -e @topologies/mytopology/scenario.yaml`  
 
 How to define my own ssh-keys?  
 _NOTE: if missing, ssh-keys are generated automatically_
-> - Save the **public ssh_key** in `keychain/<ec2_vpc_name>`.
+> - Save the **public ssh_key** in `keychain/<ec2_vpc_name>.pub`.
 > - Replace the **private ssh_key** in `keychain/<ec2_vpc_name>`.  
 
 How to **`build`, `provision`** and **`deploy` all nodes**:
@@ -131,12 +130,50 @@ How to choose `specific topologies`?
 > - `./main.yaml -e @topologies/cisco_ios/multisite_site2.yaml`  
 > - `./main.yaml -e @topologies/cisco_ios/multisite_site3.yaml`  
 
+How to **`teardown`**?
+> - `./teardown.yaml -e @topologies/cisco_ios/multisite_site1.yaml`  
+> - `./teardown.yaml -e @topologies/cisco_ios/multisite_site2.yaml`  
+> - `./teardown.yaml -e @topologies/cisco_ios/multisite_site3.yaml`  
+
+### FAQ 
+What topologies are available?  
+```
+topologies/
+├── cisco_ios
+│   ├── multisite_site1.yaml
+│   ├── multisite_site2.yaml
+│   └── multisite_site3.yaml
+├── default.yaml
+├── f5_tmos
+│   └── loadbalance.yaml
+├── infoblox_nios
+│   └── ipam_ios.yaml
+├── microsoft_windows
+│   └── server.yaml
+├── paloalto_panos
+│   └── firewall.yaml
+├── redhat_rhel
+│   └── server.yaml
+└── splunk_es
+    └── logging.yaml
+```
+
+Why the public access to Infoblox's WEBUI is not working?
+> Due to a limitation in the Infoblox's image, **the Infoblox AMI is only accessible through the `inside` interface (LAN1).**.  
+> As workaround, you can create a SSH tunnel from your machine, in order to be able to access Infoblox's WEBUI:  
+> - Add ssh-key to ssh-agent:
+>   - `ssh-add keychain/<ssh_private_key_file>` 
+> - Establish SSH Tunnel (localhost:8443 -> 10.1.2.97:443):
+>   - `ssh -l ec2-user@<tower_public_ip> -L 8443:10.1.2.97:443`
+> - Open Browser:
+>   - `open -a "Google Chrome" https://localhost:8443/`
+
 _What are the overall steps happening in background?_
 > 1. [`Build`](##Build): Runs locally, calling the role [`build`](runner/roles/build/).
 > 2. [`Provision`](##Provision): Runs locally, calling the role [`provision`](runner/roles/provision).
 > 3. [`Deploy`](##Deploy): Runs against the provisioned device, calling the role [`deploy`](runner/roles/deploy).
 
-_What happens behind the scenes? What is the logical path of the topology `main.yaml`?_
+_What happens behind the scenes? What is the logical path of the topology when i run `main.yaml`?_
 > - _[`main.yaml`](runner/project/main.yaml):_
 >    - _[`build.yaml`](runner/project/build.yaml):_
 >      - _roles:_
@@ -169,35 +206,48 @@ _What happens behind the scenes? What is the logical path of the topology `main.
 >        - _[`test_tower`](runner/roles/test_tower):_  
 >          - _application tests_
 
-
-### Build
-[Build](runner/project/roles/build) **environment's** resources **locally**:
+#### Build
+What the [`Build`](runner/project/roles/build) playbook does ?  
+[`Build`](runner/project/roles/build) **environment's** resources **locally**:
 - `download files...`
 - `create files...`
 - `compile code...`
 - `etc...`
 
-### Provision 
-[`Provision`](runner/project/provision.yaml) the following [environment's](####Environments) resources in:  
-- [Amazon Web Services](https://aws.amazon.com):
-  - [`vpc`](runner/roles/provision_ec2/present/)
-  - [`subnets`](runner/roles/provision_ec2/present)
-  - [`gateways`](runner/roles/provision_ec2/present/)
-  - [`enis`](runner/roles/provision_ec2/present/)
-  - [`eips`](runner/roles/provision_ec2/present/)
-  - [`instances`](runner/roles/provision_ec2/present/)  
+#### Provision
+What the [`Provision`](runner/project/provision.yaml) playbook does ?  
+> [`Provision`](runner/project/provision.yaml) the following [environment's](####Environments) resources:  
+> - [Amazon Web Services](https://aws.amazon.com):
+>   - [`vpc`](runner/roles/provision_ec2/present/)
+>   - [`subnets`](runner/roles/provision_ec2/present)
+>   - [`gateways`](runner/roles/provision_ec2/present/)
+>   - [`enis`](runner/roles/provision_ec2/present/)
+>   - [`eips`](runner/roles/provision_ec2/present/)
+>   - [`instances`](runner/roles/provision_ec2/present/)  
 
-### Deploy 
-[Deploy](runner/project/deploy.yaml) the following [**environments**](####Environments).
+> There are two types of `nodes` to provision in [`provision_ec2`](runner/project/roles/provision_ec2):
+> - [`network`](runner/project/roles/provision_ec2/present/network.yaml) with **3 Network interfaces**.
+> - [`host`](runner/project/roles/provision_ec2/present/host.yaml) with **2 Network interfaces**.
 
-### Unprovision
+#### Deploy
+What the [`Deploy`](runner/project/deploy.yaml) playbook does ?  
+> [`Deploy`](runner/project/deploy.yaml) the [**environments**](####Environments).  
+> For each environment the role `deploy_<environment>` shall exist to perform environment specific tasks, as per examples:
+>   - [`deploy_linux`](runner/projet/roles/deploy_linux)
+>   - [`deploy_tower`](runner/projet/roles/deploy_tower)
+>   - [`deploy_splunk`](runner/projet/roles/deploy_splunk)
+>   - [`deploy_nios`](runner/projet/roles/deploy_nios)
+
+#### Unprovision
+What the [`Unprovision`](runner/project/unprovision.yaml) playbook does ?  
 [`Unprovision`](runner/project/unprovision.yaml) the following [environment's](####Environments) resources in:  
 - [Amazon Web Services](https://aws.amazon.com):
   - [`enis`](runner/roles/provision_ec2/terminated/)
   - [`eips`](runner/roles/provision_ec2/terminated/)
   - [`instances`](runner/roles/provision_ec2/terminated/)  
 
-###  Teardown
+#### Teardown
+What the [`Teardown`](runner/project/teardown.yaml) playbook does ?  
 [`Teardown`](runner/project/teardown.yaml) the following [environment's](####Environments) resources in:  
 - [Amazon Web Services](https://aws.amazon.com):
   - [`vpc`](runner/roles/provision_ec2/absent/)
@@ -207,12 +257,9 @@ _What happens behind the scenes? What is the logical path of the topology `main.
   - [`eips`](runner/roles/provision_ec2/absent/)
   - [`instances`](runner/roles/provision_ec2/absent/)  
 
-### Remain
-[`Remain`](runner/project/remain.yaml): [`Teardown`](###Teardown) then `build`, `provision` and `deploy`.  
-
-### Reprovision
-[`Reprovision`](runner/project/remain.yaml): [`Terminate`](###Terminate) then [`Provision`](###Provision).
-
+#### Reprovision
+What the [`Reprovision`](runner/project/remain.yaml) playbook does ?  
+[`Reprovision`](runner/project/remain.yaml): [`Terminate`](###Terminate) then [`Provision`](###Provision).  
 
 ## TODO
 deploy_\<environment\> for the following:
