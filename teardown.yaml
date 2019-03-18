@@ -4,8 +4,6 @@
   hosts: localhost
   connection: local
   gather_facts: no
-  vars_files:
-    - "topologies/{{ topology | default('default') }}.yaml"
   roles:
     - role: runner
       runner_playbook: "teardown"

@@ -1,4 +1,5 @@
 ansible-runner \
   --playbook {{ runner_playbook | quote }}.yaml \
   --rotate-artifacts {{ runner_rotate_artifacts | quote }} \
+  --directory-isolation-base-path {{ runner_directory_isolation_base_path }} \
   {{ runner_action | quote }} {{ runner_private_data_dir | quote }}
