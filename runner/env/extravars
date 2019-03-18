@@ -1,5 +1,0 @@
-deploy_password: demobox123!
-ec2_region: eu-central-1
-ec2_vpc_cidr: 10.1.0.0/16
-ec2_vpc_name: palalto_panos.firewall
-environments: [panos]
