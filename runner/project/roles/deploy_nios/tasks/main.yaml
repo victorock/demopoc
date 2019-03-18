@@ -1,0 +1,4 @@
+---
+- name: "Cofngiure nios"
+  debug:
+    msg: "Deploy is done through ec2 user-data"

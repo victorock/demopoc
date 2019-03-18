@@ -47,6 +47,11 @@ The content of this repository must be seen as an environment, responsible to pe
 | mgmt         | outside         | inside         | groups     | inventory_hostname |  
 | :----------: | :-------------: | :------------: | :--------: | :----------------: |
 | `10.1.0.150` | `10.1.1.150`    | `10.1.2.150`   | `ios`      | `rtr01-ios`        | 
+| `10.1.0.149` | `10.1.1.149`    | `10.1.2.149`   | `ios`      | `rtr02-ios`        | 
+| `10.1.0.148` | `10.1.1.148`    | `10.1.2.148`   | `ios`      | `rtr03-ios`        | 
+| `10.1.0.147` | `10.1.1.147`    | `10.1.2.147`   | `ios`      | `rtr04-ios`        | 
+| `10.1.0.146` | `10.1.1.146`    | `10.1.2.146`   | `ios`      | `rtr05-ios`        | 
+| `10.1.0.145` | `10.1.1.145`    | `10.1.2.145`   | `ios`      | `rtr06-ios`        | 
 
 ### Host Devices
 | mgmt         | inside         | groups     | inventory_hostname |  
@@ -265,11 +270,9 @@ What the [`Reprovision`](runner/project/remain.yaml) playbook does ?
 ## TODO
 deploy_\<environment\> for the following:
 - ios
-- panos
 - asa
 - tmos
 - fortios
-- nios
 
 Performing the following tasks:
 - configure environment administrative password according to the value of variable `deploy_password`.
