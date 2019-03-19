@@ -2,7 +2,6 @@
 ec2_instance_role: "host"
 ec2_instance_type: "t2.large"
 ec2_instance_user_data: |
-＜powershell＞
   <powershell>
   $admin = [adsi]("WinNT://./administrator, user")
   $admin.PSBase.Invoke("SetPassword", "{{ deploy_password }}")
