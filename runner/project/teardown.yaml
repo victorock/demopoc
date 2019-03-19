@@ -1,6 +1,6 @@
 ---
 - name: "Teardown"
-  hosts: "all"
+  hosts: "{{ environments }}"
   vars:
     ansible_connection: "local"
     ansible_gather_facts: false

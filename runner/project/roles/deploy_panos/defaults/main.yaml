@@ -1,6 +1,4 @@
 ---
-provider: "{{ ansible_provider }}"
-
 deploy_panos_zones:
   - name: "untrust"
     mode: "layer3"

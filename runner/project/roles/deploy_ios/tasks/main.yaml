@@ -1,4 +1,4 @@
 ---
 - name: "Deploy ios"
   ios_config:
-    src: "interfaces.j2"
+    src: "config.cfg.j2"

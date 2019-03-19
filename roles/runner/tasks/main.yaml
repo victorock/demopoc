@@ -21,7 +21,7 @@
 
 - name: "Pip install requirements"
   pip:
-    name: "ansible-runner"
+    name: "git+https://github.com/ansible/ansible-runner"
     state: "latest"
 
 - name: "Solve Galaxy dependencies"

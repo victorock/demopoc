@@ -1,10 +1,15 @@
 ec2_instance_role: "network"
 ec2_instance_type: "t2.large"
 ec2_instance_user_data: |
-  admin_password: '{{ deploy_password }}'
+  #!/bin/bash
+  curl http://cdn.f5.com/product/templates/utils/firstrun.utils --output /tmp/firstrun.utils
+  . /tmp/firstrun.utils
+  checkF5Ready
+  tmsh modify auth user '{{ ansible_user }}' password '{{ deploy_password }}'
+  tmsh save /sys config
 
 ec2_ami:
-  name: "F5*"
+  name: "F5*BIGIP*PAYG*Good 25Mbps*"
   owners: "679593333241"
   architecture: "x86_64"
   # GOOD 25mbps

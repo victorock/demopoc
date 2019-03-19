@@ -1,0 +1,29 @@
+---
+- name: "Check API availability"
+  delegate_to: localhost
+  uri:
+    url: "https://{{ ansible_host }}/tmui/login.jsp"
+    validate_certs: "{{ ansible_provider.validate_certs }}"
+  register: deploy_tmos_rest
+  until: not deploy_tmos_rest is failed
+  retries: 10
+  delay: 30
+
+# There is no bigip module to change password
+# Already tried to use cloud-init and ssh_keyfile with both bigip_command, bigip_config and bigip_user.
+# TODO: find a more elegant way of doing this
+- name: "Set admin password"
+  expect:
+    command: ssh -i {{ playbook_dir }}/keychain/{{ ec2_vpc_name }} -o StrictHostKeyChecking=no admin@"{{ ansible_host }}" modify auth user {{ ansible_user }} password {{ ansible_password }} ; save sys config
+    responses:
+      (?i)password: "{{ ansible_password }}"
+
+- name: "Disable setup utility"
+  delegate_to: localhost
+  bigip_sys_global:
+    server: "{{ ansible_provider.server }}"
+    server_port: "{{ ansible_provider.server_port }}"
+    user: "{{ ansible_provider.user }}"
+    password: "{{ ansible_provider.password }}"
+    validate_certs: "{{ ansible_provider.validate_certs }}"
+    gui_setup: false

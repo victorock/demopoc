@@ -15,5 +15,5 @@ deploy_password: "demobox123!"
 # Environments:
 #  Leave only the environments that you want in your topology.
 environments:
-  - tower
+#  - tower
   - windows

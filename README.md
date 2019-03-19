@@ -95,7 +95,8 @@ Request `Red Hat Ansible Tower` subscription [here](https://www.ansible.com/lice
 
 ### F5
 **Accept** the following subscriptions:
-  - BigIP (**required**): Click [_Continue to Subscribe_](https://aws.amazon.com/marketplace/pp/B0182WYGRA)
+  - BigIP PAYG (**required**): Click [_Continue to Subscribe_](https://aws.amazon.com/marketplace/pp/B079C44MFH)
+  - BigIP BYOL (_optional_): Click [_Continue to Subscribe_](https://aws.amazon.com/marketplace/pp/B00KXHN9GC)
 
 ### PaloAlto
 **Accept** the following subscriptions:
@@ -269,9 +270,7 @@ What the [`Reprovision`](runner/project/remain.yaml) playbook does ?
 
 ## TODO
 deploy_\<environment\> for the following:
-- ios
 - asa
-- tmos
 - fortios
 
 Performing the following tasks:

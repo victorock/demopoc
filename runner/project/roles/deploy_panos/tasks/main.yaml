@@ -2,8 +2,8 @@
 - name: "Set admin password"
   delegate_to: localhost
   panos_admpwd:
-    ip_address: "{{ provider.host }}"
-    username: "{{ provider.username }}"
+    ip_address: "{{ ansible_provider.host }}"
+    username: "{{ ansible_provider.username }}"
     key_filename: "keychain/{{ ec2_vpc_name }}"
     newpassword: "{{ deploy_password }}"
   register: deploy_panos_admpwd
@@ -14,9 +14,9 @@
 - name: "Create zones"
   delegate_to: localhost
   panos_zone:
-    ip_address: "{{ provider.host }}"
-    username: "{{ provider.username }}"
-    password: "{{ provider.password }}"
+    ip_address: "{{ ansible_provider.host }}"
+    username: "{{ ansible_provider.username }}"
+    password: "{{ ansible_provider.password }}"
     zone: "{{ deploy_panos_zone.name }}"
     mode: "{{ deploy_panos_zone.mode }}"
   loop: "{{ deploy_panos_zones }}"
@@ -27,9 +27,9 @@
 - name: "Configure interfaces"
   delegate_to: localhost
   panos_interface:
-    ip_address: "{{ provider.host }}"
-    username: "{{ provider.username }}"
-    password: "{{ provider.password }}"
+    ip_address: "{{ ansible_provider.host }}"
+    username: "{{ ansible_provider.username }}"
+    password: "{{ ansible_provider.password }}"
     if_name: "{{ deploy_panos_interface.name }}"
     zone_name: "{{ deploy_panos_interface.zone_name }}"
     create_default_route: "{{ deploy_panos_interface.create_default_route }}"
