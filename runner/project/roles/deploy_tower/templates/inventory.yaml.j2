@@ -5,7 +5,42 @@ all:
 {% for host in ansible_play_hosts %}
     {{ host }}:
       ansible_host: "{{ hostvars[host].ansible_host }}"
+{%  if hostvars[host].ansible_gather_facts %}
+      ansible_gather_facts: "{{ hostvars[host].ansible_gather_facts }}"
+{%  endif %}
+{%  if hostvars[host].ansible_port %}
+      ansible_port: "{{ hostvars[host].ansible_port }}"
+{%  endif %}
+{%  if hostvars[host].ansible_become_user %}
+      ansible_become_user: "{{ hostvars[host].ansible_become_user }}"
+{%  endif %}
+{%  if hostvars[host].ansible_become_method %}
+      ansible_become_method: "{{ hostvars[host].ansible_become_method }}"
+{%  endif %}
+{%  if hostvars[host].ansible_become %}
+      ansible_become: "{{ hostvars[host].ansible_become }}"
+{%  endif %}
+{%  if hostvars[host].ansible_winrm_server_cert_validation %}
+      ansible_winrm_server_cert_validation: "{{ hostvars[host].ansible_winrm_server_cert_validation }}"
+{%  endif %}
+{%  if hostvars[host].ansible_winrm_scheme %}
+      ansible_winrm_scheme: "{{ hostvars[host].ansible_winrm_scheme }}"
+{%  endif %}
+{%  if hostvars[host].ansible_winrm_transport %}
+      ansible_winrm_transport: "{{ hostvars[host].ansible_winrm_transport }}"
+{%  endif %}
+{%  if hostvars[host].ansible_network_os %}
       ansible_network_os: "{{ hostvars[host].ansible_network_os }}"
+{%  endif %}
+{%  if hostvars[host].ansible_user %}
+      ansible_user: "{{ hostvars[host].ansible_user }}"
+{%  endif %}
+{%  if hostvars[host].ansible_connection %}
+      ansible_connection: "{{ hostvars[host].ansible_connection }}"
+{%  endif %}
+{%  if hostvars[host].ansible_provider %}
+      ansible_provider: "{{ hostvars[host].ansible_provider }}"
+{%  endif %}
 {% endfor %}
   children:
 {% for group in groups.keys() %}

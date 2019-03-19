@@ -7,3 +7,18 @@
   roles:
     - role: runner
       runner_playbook: "main"
+
+#
+# Example: Loop for N runners in //
+#  vars:
+#    seats: "{{ range(1, 10) | list }}"
+#  tasks:
+#    - name: "Instantiate runners (10)"
+#      include_role:
+#        name: "runner"
+#      loop: "{{ seats }}"
+#      loop_control:
+#        loop_var: seat
+#      vars:
+#        runner_playbook: "main"
+#        ec2_vpc_name: "{{ ec2_vpc_name }}_{{ seat }}"
