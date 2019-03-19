@@ -13,6 +13,4 @@
   version: "v0.1b"
 - name: "victorock.download"
   version: "v0.1b"
-- name: "ansible-network.network-engine"
-- name: "ansible-network.cisco_ios"
 - name: "paloaltonetworks.paloaltonetworks"
