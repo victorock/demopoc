@@ -1,0 +1,42 @@
+---
+- name: "Create local project folder for inventory"
+  become: true
+  file:
+    name: "/var/lib/awx/projects/local_inventory"
+    state: "directory"
+    group: "awx"
+    owner: "awx"
+
+- name: "Create local project for inventory"
+  tower_project:
+    tower_host: "{{ tower_config.host }}"
+    tower_username: "{{ tower_config.username }}"
+    tower_password: "{{ tower_config.password }}"
+    tower_verify_ssl: "{{ tower_config.verify_ssl }}"
+    name: "local_inventory"
+    organization: "{{ tower_config.organization.keys() | first}}"
+    scm_type: "manual"
+    local_path: "local_inventory"
+
+- name: "Copy inventory file"
+  template:
+    src: "inventory.yaml.j2"
+    dest: "/var/lib/awx/projects/local_inventory/{{ ec2_vpc_name }}.yaml"
+
+# Does not work with local projects....
+# there is no option to specify the path when scm type is `file`
+#- name: "Import inventory file as dynamic source"
+#  tower_inventory_source:
+#    tower_host: "{{ tower_config.host }}"
+#    tower_username: "{{ tower_config.username }}"
+#    tower_password: "{{ tower_config.password }}"
+#    tower_verify_ssl: "{{ tower_config.verify_ssl }}"
+#    name: "local_inventory"
+#    inventory: "infraops"
+#    source: "file"
+#    source_path: "inventory"
+#    update_on_launch: true
+- name: "Import inventory file"
+  shell: tower-manage inventory_import --inventory-name infraops --source {{ ec2_vpc_name }}.yaml
+  args:
+    chdir: "/var/lib/awx/projects/local_inventory"

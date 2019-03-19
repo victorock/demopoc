@@ -12,7 +12,7 @@ tower_config:
 
 # Organization
   organization:
-    DEMO:
+    DEMOPOC:
       name: "DEMOPOC"
       description: "DEMOPOC"
       users:

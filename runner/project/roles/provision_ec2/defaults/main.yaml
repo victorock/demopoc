@@ -20,8 +20,8 @@ ec2_group_rules:
     cidr_ip: 0.0.0.0/0
 
 # Instance Configurations
-ec2_instance: "network"
 ec2_instance_name: "{{ inventory_hostname }}"
+ec2_instance_role: "network"
 ec2_instance_type: "m4.xlarge"
 ec2_instance_image: "ami-1bbdd574"
 ec2_instance_key: "{{ ec2_vpc_name }}"

@@ -3,3 +3,22 @@
 
 - name: "Ensure instance state as {{ ec2_state }}"
   include_tasks: "{{ ec2_instance_role }}.yaml"
+
+- name: "Add instance to inventory"
+  run_once: false
+  changed_when: false
+  add_host:
+    hostname: "{{ ec2_instance_name }}"
+    ansible_host: "{{ r_ec2_eip_mgmt.public_ip }}"
+    groups:
+     - "tag_Name_{{ ec2_instance_name }}"
+     - "tag_Environment_{{ ec2_vpc_name }}"
+     - "tag_Platform_{{ ansible_network_os }}"
+
+- name: "Refresh inventory"
+  changed_when: false
+  meta: refresh_inventory
+
+- name: "Ready"
+  debug:
+    msg: "{{ ec2_instance_name }}: ssh {{ ansible_user }}@{{ ansible_host }} -i keychain/{{ ec2_vpc_name }}"

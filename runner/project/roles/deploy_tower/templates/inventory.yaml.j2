@@ -1,0 +1,24 @@
+---
+{{ ansible_managed | comment }}
+all:
+  hosts:
+{% for host in ansible_play_hosts %}
+    {{ host }}:
+      ansible_host: "{{ hostvars[host].ansible_host }}"
+      ansible_network_os: "{{ hostvars[host].ansible_network_os }}"
+{% endfor %}
+  children:
+{% for group in groups.keys() %}
+{%  if (groups[group] | length) %}
+{%    if (group != 'all') and (group != 'ungrouped') %}
+    {{ group }}:
+{%      set hosts_in_group=( ansible_play_hosts | intersect(groups[group])) %}
+{%      if hosts_in_group | length %}
+      hosts:
+{%        for host_in_group in hosts_in_group %}
+        {{ host_in_group }}:
+{%        endfor %}
+{%      endif %}
+{%    endif %}
+{%  endif %}
+{% endfor %}
