@@ -37,3 +37,6 @@
   loop_control:
     loop_var: deploy_panos_interface
     label: "interface: {{ deploy_panos_interface.name }}"
+
+- name: "Flush Handlers"
+  meta: flush_handlers

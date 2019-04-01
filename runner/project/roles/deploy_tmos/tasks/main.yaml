@@ -27,3 +27,6 @@
     password: "{{ ansible_provider.password }}"
     validate_certs: "{{ ansible_provider.validate_certs }}"
     gui_setup: false
+
+- name: "Flush Handlers"
+  meta: flush_handlers

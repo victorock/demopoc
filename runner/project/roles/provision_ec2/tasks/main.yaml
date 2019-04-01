@@ -7,3 +7,6 @@
     - name: "not implemented"
       fail:
         msg: "provision_ec2 state {{ ec2_state }} is not implemented"
+
+- name: "Flush Handlers"
+  meta: flush_handlers

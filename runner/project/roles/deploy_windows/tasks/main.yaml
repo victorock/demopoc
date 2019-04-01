@@ -19,3 +19,6 @@
 - name: "Install updates and reboot (if needed)"
   win_updates:
     reboot: "{{ deploy_windows_update_reboot }}"
+
+- name: "Flush Handlers"
+  meta: flush_handlers
