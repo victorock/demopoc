@@ -1,4 +1,11 @@
 ---
+- name: "Wait for system to become reachable"
+  wait_for_connection:
+    timeout: 900
+
+- name: "Gather facts"
+  setup:
+
 - name: "Ensure Red Hat Update Infrastructure repositories"
   become: true
   ini_file:

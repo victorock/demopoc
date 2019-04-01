@@ -1,4 +1,11 @@
 ---
+- name: "Wait for system to become reachable"
+  wait_for_connection:
+    timeout: 900
+
+- name: "Gather facts"
+  setup:
+
 - name: "Turn UAC off"
   win_regedit:
     # Use single quote to avoid erros related to escape characters because of backslash...
