@@ -1,15 +1,15 @@
 ---
 ec2_instance_role: "host"
 ec2_instance_type: "t2.large"
+# Using lookup because the windows network takes some time to come up...
+# By doing this way, we are not dependent of network to setup winrm.
 ec2_instance_user_data: |
   <powershell>
+  {{ lookup('url', 'https://raw.githubusercontent.com/ansible/ansible/devel/examples/scripts/ConfigureRemotingForAnsible.ps1', split_lines=False) }}
   $admin = [adsi]("WinNT://./administrator, user")
   $admin.PSBase.Invoke("SetPassword", "{{ deploy_password }}")
-  $url = "https://raw.githubusercontent.com/ansible/ansible/devel/examples/scripts/ConfigureRemotingForAnsible.ps1"
-  $file = "C:\Windows\Temp\ConfigureRemotingForAnsible.ps1"
-  (New-Object -TypeName System.Net.WebClient).DownloadFile($url, $file)
-  powershell.exe -ExecutionPolicy ByPass -File $file
   </powershell>
+  <persist>true</persist>
 
 ec2_ami:
   name: "Windows_Server-2016-English-Full-ECS_Optimized*"
