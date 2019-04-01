@@ -12,7 +12,3 @@
 - name: "Install updates and reboot (if needed)"
   win_updates:
     reboot: "{{ deploy_windows_update_reboot }}"
-
-- name: "Reboot me?"
-  win_reboot:
-  when: reboot_me.reboot_required
