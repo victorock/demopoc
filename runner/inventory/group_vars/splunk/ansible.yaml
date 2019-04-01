@@ -3,3 +3,4 @@ ansible_network_os: "splunk"
 ansible_user: "ec2-user"
 ansible_connection: "ssh"
 ansible_gather_facts: false
+ansible_become: true
