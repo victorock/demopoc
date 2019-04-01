@@ -1,4 +1,7 @@
 ---
-- name: "Cofngiure nios"
+- name: "Configure nios"
   debug:
     msg: "Deploy is done through ec2 user-data"
+
+- name: "Flush Handlers"
+  meta: flush_handlers
