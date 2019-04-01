@@ -1,7 +1,7 @@
 ---
 - name: "Deploy"
   hosts: "{{ environments }}"
-  # ansible_gather_facts from inventory not being respected :(
+  # ansible_gather_facts from inventory is not being respected :(
   gather_facts: false
   roles:
     - role: "deploy"
