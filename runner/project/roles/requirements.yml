@@ -6,9 +6,9 @@
 - name: "victorock.tower"
   version: v0.1b
 - name: "victorock.tower_config"
-  version: "v0.1b"
+  version: "v0.1c"
 - name: "victorock.tower_setup"
-  version: "v0.1b"
+  version: "v0.1c"
 - name: "victorock.tower_facts"
   version: "v0.1b"
 - name: "victorock.download"
