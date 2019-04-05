@@ -19,11 +19,6 @@
     src: "{{ runner_private_data_dir }}/project/keychain/{{ ec2_vpc_name }}"
     dest: "{{ runner_private_data_dir }}/env/ssh_key"
 
-- name: "Pip install requirements"
-  pip:
-    name: "git+https://github.com/ansible/ansible-runner"
-    state: "latest"
-
 - name: "Solve Galaxy dependencies"
   shell: "{{ lookup('template', 'ansible-galaxy.cli.j2') }}"
   register: galaxy_result

@@ -67,16 +67,17 @@ The content of this repository must be seen as an environment, responsible to pe
 
 Installation of the following packages:
 > - [ansible](https://pypi.org/ansible/)
+> - [ansible-runner](https://pypi.org/ansible-runner/)
 > - [netaddr](https://pypi.org/netaddr/)
 > - [boto](https://pypi.org/boto/)
 > - [boto3](https://pypi.org/boto3/)
 > - [passlib](https://pypi.org/passlib/)
 
 - Installation as normal user:
-> `pip --user install ansible netaddr boto boto3 passlib`
+> `pip --user install ansible ansible-runner netaddr boto boto3 passlib`
 
-- Installation as privileged user or from a `virtualenv`:
-> `pip install ansible netaddr boto boto3 passlib`
+- Installation as privileged user or from inside a `virtualenv`:
+> `pip install ansible ansible-runner netaddr boto boto3 passlib`
 
 ### Environments
 #### Tower
