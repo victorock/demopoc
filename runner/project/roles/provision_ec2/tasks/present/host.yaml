@@ -73,6 +73,10 @@
       "product-code": "{{ ec2_ami.product_code | default(omit) }}"
   register: r_ec2_ami_facts
 
+- name: "Assert that at least one valid image exists"
+  assert:
+    that: r_ec2_ami_facts.images | length > 0
+
 - name: "Create Instance"
   delegate_to: localhost
   vars:

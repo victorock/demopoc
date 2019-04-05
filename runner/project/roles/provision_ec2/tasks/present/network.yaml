@@ -114,6 +114,10 @@
       architecture: "{{ ec2_ami.architecture }}"
   register: r_ec2_ami_facts
 
+- name: "Assert that at least one valid image exists"
+  assert:
+    that: r_ec2_ami_facts.images | length > 0
+
 - name: "Create Instance"
   delegate_to: localhost
   vars:
