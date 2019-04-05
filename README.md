@@ -80,6 +80,11 @@ Installation of the following packages:
 > `pip install ansible ansible-runner netaddr boto boto3 passlib`
 
 ### Environments
+### AWS
+Open a ticket and request to increase the number of `Elastic IPs` for your account.  
+By default AWS only allows 5 `Elastic IPs` per VPC, meanwhile some labs may required more.  
+Reference: [Elastic IP Addresses (IPv4)](https://docs.aws.amazon.com/vpc/latest/userguide/amazon-vpc-limits.html)  
+
 #### Tower
 Request `Red Hat Ansible Tower` subscription [here](https://www.ansible.com/license):
   - **Save** the _`license`_ **file** in _`licenses/tower`_.
