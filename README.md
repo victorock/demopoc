@@ -246,10 +246,10 @@ What the [`Deploy`](runner/project/deploy.yaml) playbook does ?
 > [`Deploy`](runner/project/deploy.yaml) the [**environments**](####Environments).  
 > For each environment the role `deploy_<environment>` shall exist to perform environment specific tasks.
 > Follow below roles in charge of environment specific deployments:  
->   - [`deploy_linux`](runner/projet/roles/deploy_linux)
->   - [`deploy_tower`](runner/projet/roles/deploy_tower)
->   - [`deploy_splunk`](runner/projet/roles/deploy_splunk)
->   - [`deploy_nios`](runner/projet/roles/deploy_nios)
+>   - [`deploy_linux`](runner/project/roles/deploy_linux)
+>   - [`deploy_tower`](runner/project/roles/deploy_tower)
+>   - [`deploy_splunk`](runner/project/roles/deploy_splunk)
+>   - [`deploy_nios`](runner/project/roles/deploy_nios)
 
 #### Unprovision
 What the [`Unprovision`](runner/project/unprovision.yaml) playbook does ?  
