@@ -1,6 +1,8 @@
 ---
 dependencies:
   - role: "paloaltonetworks.paloaltonetworks"
+  - role: "victorock.tower_config"
+    when: tower_config is defined
 
 galaxy_info:
   role_name: deploy_panos
