@@ -1,9 +1,9 @@
 ---
 tower_config:
-  host: "localhost"
+  host: "{{ ansible_host }}"
   username: "admin"
   password: "{{ deploy_password }}"
-  verify_ssl: "false"
+  verify_ssl: false
   format: json
 
 # Setting
