@@ -1,5 +1,5 @@
 ---
-ec2_instance_role: "host"
+ec2_instance_role: "system"
 ec2_instance_type: "t2.large"
 # Using lookup because the windows network takes some time to come up...
 # By doing this way, we are not dependent of network to setup winrm.

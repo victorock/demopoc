@@ -1,5 +1,5 @@
 ---
-ec2_instance_role: "host"
+ec2_instance_role: "system"
 ec2_instance_type: "t2.xlarge"
 
 ec2_ami:

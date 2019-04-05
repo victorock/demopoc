@@ -1,4 +1,4 @@
-ec2_instance_role: "host"
+ec2_instance_role: "system"
 ec2_instance_type: "c4.large"
 ec2_instance_user_data: |
   # infoblox-config
