@@ -1,0 +1,17 @@
+---
+tower_config:
+  host: "localhost"
+  username: "admin"
+  password: "{{ deploy_password }}"
+  verify_ssl: "false"
+  format: json
+
+  organization:
+    DEMOPOC:
+      name: "DEMOPOC"
+      credentials:
+        - name: "{{ ansible_network_os }}-ssh"
+          kind: "ssh"
+          username: "{{ ansible_user }}"
+          ssh_key_data: "keychain/{{ ec2_vpc_name }}"
+
