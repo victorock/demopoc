@@ -1,12 +1,19 @@
 
+---
+- name: "Validate ec2_state"
+  no_log: true
+  vars:
+    ec2_states:
+      - present
+      - absent
+      - terminated
+  assert:
+    that: ec2_state is in ec2_states
+    fail_msg: "not in {{ ec2_states }}"
+    success_msg: "OK"
+
 - name: "Ensure provision state as {{ ec2_state }}"
-  block:
-    - name: "{{ ec2_state }}/main.yaml"
-      include_tasks: "{{ ec2_state }}/main.yaml"
-  rescue:
-    - name: "not implemented"
-      fail:
-        msg: "provision_ec2 state {{ ec2_state }} is not implemented"
+  include_tasks: "{{ ec2_state }}/main.yaml"
 
 - name: "Flush Handlers"
   meta: flush_handlers
