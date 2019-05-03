@@ -1,6 +1,10 @@
 # State
 ec2_state: "{{ provision_state | default('create') }}"
 
+# Credentials
+ec2_aws_access_key: "{{ lookup('ENV', 'AWS_ACCESS_KEY_ID') }}"
+ec2_aws_secret_key: "{{ lookup('ENV', 'AWS_SECRET_ACCESS_KEY') }}"
+
 # Region Configurations
 ec2_region: "eu-central-1"
 
