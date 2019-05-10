@@ -2,9 +2,23 @@ ec2_instance_role: "network"
 ec2_instance_type: "t2.large"
 ec2_instance_user_data: |
   #!/bin/bash
-  curl http://cdn.f5.com/product/templates/utils/firstrun.utils --output /tmp/firstrun.utils
-  . /tmp/firstrun.utils
-  checkF5Ready
+  while [[ ! -e '/var/prompt/ps1' ]]; do
+    echo -n '.'
+    sleep 5
+  done 
+
+  while [[ ! -e '/var/prompt/cmiSyncStatus' ]]; do
+    echo -n '.'
+    sleep 5
+  done 
+
+  STATUS=`cat /var/prompt/cmiSyncStatus`
+  while [[ ${STATUS}x != 'Standalone'x ]]; do
+    echo -n '.'
+    sleep 5
+    STATUS=`cat /var/prompt/cmiSyncStatus`
+  done
+
   tmsh modify auth user '{{ ansible_user }}' password '{{ deploy_password }}'
   tmsh save /sys config
 
