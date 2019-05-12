@@ -149,24 +149,29 @@ cp <my key> files/keychain/site3
 ```  
 > _HINT: Topologies are build from [inventories](inventories/) 
 
-### Terminate specific group of nodes (`ex: site1`)  
+### Terminate specific site from topology 
 ```
 ./playbooks/terminate.yaml -i inventories/cisco_ios --limit site1
 ```  
 
-### Provision specific group of nodes (`ex: tower`)  
+### Spawn on specific group of nodes
 ```
-./playbooks/provision.yaml -i inventories/cisco_ios --limit tower
+./playbooks/main.yaml -i inventories/cisco_ios --limit tower
 ```  
 
-### Reprovision specific node (`ex: rtr01-ios`)  
+### Terminate specific node
+```
+./playbooks/main.yaml -i inventories/cisco_ios --limit rtr05-ios
+```  
+
+### Reprovision specific node
 ```
 ./playbooks/reprovision.yaml -i inventories/cisco_ios --limit rtr01-ios
 ```  
 
-### Reprovision specific group of nodes (`ex: ios`)   
+### Reprovision specific group of nodes
 ```
-./playbooks/reprovision.yaml -i inventories/cisco_ios --limit ios
+./playbooks/reprovision.yaml -i inventories/cisco_ios --limit 'site1:&ios'
 ```  
 
 ### Stack topologies
