@@ -2,7 +2,7 @@ ec2_instance_role: "host"
 ec2_instance_type: "t2.medium"
 
 ec2_ami:
-  name: "RHEL-8*GA*"
+  name: "RHEL-7*GA*"
   architecture: "x86_64"
   owners: "309956199498"
 
