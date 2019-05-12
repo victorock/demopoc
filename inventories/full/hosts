@@ -67,9 +67,17 @@ all:
         site1:
           hosts:
             host01-tower:
-        site2:
-          hosts:
+            host01-linux:
+            host01-windows:
+            host01-nios:
+            host01-splunk:
+            fw01-panos:
+            fw01-fortios:
+            fw01-asa:
+            lb01-tmos:
+            rtr01-ios:
+            rtr02-ios:
             rtr03-ios:
-        site3:
-          hosts:
+            rtr04-ios:
             rtr05-ios:
+            rtr06-ios:

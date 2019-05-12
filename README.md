@@ -104,9 +104,9 @@ cp -ap inventories/full inventories/mytopology
 ```
 vi inventories/mytopology/hosts
 ```
-3. Edit the file [inventories/mytopology/group_vars/all.yaml](inventories/full/group_vars/all.yaml) to customize subnets, vpcs, regions...    
+3. Edit the file [inventories/mytopology/group_vars/site1.yaml](inventories/full/group_vars/site1.yaml) to customize subnets, vpcs, regions...    
 ```
-vi inventories/mytopoly/group_vars/all.yaml
+vi inventories/mytopoly/group_vars/site1.yaml
 ```
 > _NOTE: For multisite topology, consult [cisco_ios](inventories/cisco_ios/)_
 
@@ -129,7 +129,7 @@ cp <my key> files/keychain/site3
 ```
 ./playbooks/main.yaml -i inventories/full
 ```  
-> _NOTE: By default everything is provisioned in [site1](inventories/full/all.yaml).  
+> _NOTE: By default everything is provisioned in [site1](inventories/full/site1.yaml).  
 
 ### Provision all nodes from topology
 ```
@@ -210,31 +210,31 @@ inventories/
 │   └── hosts
 ├── f5_tmos
 │   ├── group_vars
-│   │   └── all.yaml
+│   │   └── site1.yaml
 │   └── hosts
 ├── full
 │   ├── group_vars
-│   │   └── all.yaml
+│   │   └── site1.yaml
 │   └── hosts
 ├── infoblox_nios
 │   ├── group_vars
-│   │   └── all.yaml
+│   │   └── site1.yaml
 │   └── hosts
 ├── microsoft_windows
 │   ├── group_vars
-│   │   └── all.yaml
+│   │   └── site1.yaml
 │   └── hosts
 ├── paloalto_panos
 │   ├── group_vars
-│   │   └── all.yaml
+│   │   └── site1.yaml
 │   └── hosts
 ├── redhat_rhel
 │   ├── group_vars
-│   │   └── all.yaml
+│   │   └── site1.yaml
 │   └── hosts
 └── splunk_es
     ├── group_vars
-    │   └── all.yaml
+    │   └── site1.yaml
     └── hosts
 ```
 
