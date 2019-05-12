@@ -12,7 +12,7 @@ ec2_instance_user_data: |
   <persist>true</persist>
 
 ec2_ami:
-  name: "Windows_Server-*-English-Full-*"
+  name: "Windows_Server-2019-English-Full-Base*"
   architecture: "x86_64"
   owners: "591542846629"
 
