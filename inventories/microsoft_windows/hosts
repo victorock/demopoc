@@ -1,0 +1,20 @@
+---
+all:
+  hosts:
+    host01-tower:
+    host01-windows:
+  children:
+    host:
+      children:
+        tower:
+          hosts:
+            host01-tower:
+        windows:
+          hosts:
+            host01-windows:
+    sites:
+      children:
+        site1:
+          hosts:
+            host01-tower:
+            host01-windows:

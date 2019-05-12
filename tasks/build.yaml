@@ -1,0 +1,4 @@
+---
+- name: "build"
+  include_role:
+    name: "build"

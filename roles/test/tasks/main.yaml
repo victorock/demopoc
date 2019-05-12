@@ -1,0 +1,9 @@
+---
+- name: "Validate connectivity"
+  wait_for_connection:
+    delay: "10"
+    timeout: "900"
+
+- name: "Call test_provider"
+  include_role:
+    name: "{{ test_provider }}"

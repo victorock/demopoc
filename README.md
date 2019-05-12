@@ -1,8 +1,9 @@
 # Summary
-Provision disposable topology with network devices from AWS marketplace.
+Collection to provision disposable topologies.
 
 # Introduction
-The content of this repository must be seen as an environment, responsible to perform the following:
+## Roles
+The content of this repository is subdivided in the following categories:
 
 1. `build`
 > - Manipulation of **`local artifacts`**, mainly files operatios.  
@@ -87,7 +88,7 @@ Reference: [Elastic IP Addresses (IPv4)](https://docs.aws.amazon.com/vpc/latest/
 
 #### Tower
 Request `Red Hat Ansible Tower` subscription [here](https://www.ansible.com/license):
-  - **Save** the _`license`_ **file** in _`licenses/tower`_.
+  - **Save** the _`license`_ **file** in _`files/licenses/tower`_.
 
 ### Infoblox
 **Accept** the following subscriptions:
@@ -119,160 +120,151 @@ Request `Red Hat Ansible Tower` subscription [here](https://www.ansible.com/lice
 **Accept** the following subscriptions:
   - Fortigate (**required**): Click [_Continue to Subscribe_](https://aws.amazon.com/marketplace/pp/B00PCZSWDA)
 
-## Howto
+## Howtos
+
 How to create my own `topology`?
-> - Create a directory for your topology: `mkdir topologies/mytopology`.  
-> - Copy the file [`topologies/default.yaml`](topologies/environment.yaml) to `topologies/mytopology/scenario.yaml`.  
-> - Edit the file [`topologies/mytopology.yaml`](topologies/mytopology/scenario.yaml).  
-> - Customize the subnets, vpcs, regions...  
-> - Pick and choose the list of nodes, vendors, technologies and put them in `environments`.  
-> - Run `./main.yaml -e @topologies/mytopology/scenario.yaml`  
+> - Copy the directory [`inventories/full`](inventories/full) to `inventories/mytopology`.  
+> - Edit the file [`inventories/mytopology/hosts`](inventories/full/hosts) to choose the nodes in your topology.  
+> - Edit the file [`inventories/mytopology/group_vars/all.yaml`](inventories/full/group_vars/all.yaml) to customize subnets, vpcs, regions...    
+> - For multisite topology, consult [`cisco_ios`](inventories/cisco_ios/)
 
 How to define my own ssh-keys?  
 _NOTE: if missing, ssh-keys are generated automatically_
-> - Save the **public ssh_key** in `keychain/<ec2_vpc_name>.pub`.
-> - Replace the **private ssh_key** in `keychain/<ec2_vpc_name>`.  
+> - Copy the **public ssh_key** in `files/keychain/<ec2_vpc_name>.pub`.
+> - Copy the **private ssh_key** in `files/keychain/<ec2_vpc_name>`.  
 
 How to **`build`, `provision`** and **`deploy` all nodes**:
-> - `./main.yaml -e @topologies/default.yaml`  
+> - `./playbooks/main.yaml -i inventories/full`  
 
-How to choose `specific topologies`?
-> In order to **`build`, `provision`** and **`deploy specific environments`** in the topology:  
-> - `./main.yaml -e @topologies/cisco_ios/multisite_site1.yaml`  
-> - `./main.yaml -e @topologies/cisco_ios/multisite_site2.yaml`  
-> - `./main.yaml -e @topologies/cisco_ios/multisite_site3.yaml`  
+How to spawn `specific topologies`?
+> In order to **`build`, `provision`** and **`deploy specific environment`** in the topology:  
+> - `./playbooks/main.yaml -i inventories/cisco_ios`  
 
-How to **`teardown`**?
-> - `./teardown.yaml -e @topologies/cisco_ios/multisite_site1.yaml`  
-> - `./teardown.yaml -e @topologies/cisco_ios/multisite_site2.yaml`  
-> - `./teardown.yaml -e @topologies/cisco_ios/multisite_site3.yaml`  
+How to manipulate `specific nodes`?
+> Hence topology is build on top of inventory, there is no magic:
+> - In order to **`terminate`** a group (`ex: site1`) in the topology:  
+>   - `s`  
+> - In order to **`provision`** a group (`ex: tower`) in the topology:  
+>   - `./playbooks/terminate.yaml -i inventories/cisco_ios --limit tower`  
+> - In order to **`reprovision`** a `node` in the topology:  
+>   - `./playbooks/reprovision.yaml -i inventories/cisco_ios --limit rtr01-ios`  
+> - In order to **`reprovision`** a group (`ex: ios`) in the topology:  
+>   - `./playbooks/reprovision.yaml -i inventories/cisco_ios --limit ios`  
+
+How to stack topologies together?
+> **NOTES:**
+>   - **Multiple sites cannot be provisioned in parallel in the same play because of race conditions**  
+>   - **Multiple instances are provisioned in parallel.**  
+>   - **Mutiple sites can be provisioned in parallel from different terminals with different --limit.**  
+
+> If the topology follows the guideline for groups and vpc names, then the process is straighforward:
+> - To provision the `cisco_ios`, which includes 3 sites, where site1 is the main site:
+>   - `./playbooks/provision.yaml -i inventories/cisco_ios --limit site1`  
+>   - `./playbooks/provision.yaml -i inventories/cisco_ios --limit site2`  
+>   - `./playbooks/provision.yaml -i inventories/cisco_ios --limit site3`  
+> - To provision Infoblox on top of the previous topology:
+>   - `./playbooks/provision.yaml -i inventories/infoblox_nios`  
+> - To provision Splunk on top of the previous topology:
+>   - `./playbooks/provision.yaml -i inventories/splunk_es`  
+
+How to integrate with Ansible Tower?
+> Create a project for `https://www.github.com/victorock/demopoc`.  
+> Create an inventory and define a source from project (`ex: inventories/cisco_ios/hosts`).  
+> Create a `job template` and choose a playbook from `playbooks` (`ex: playbooks/main.yaml`).
 
 ### FAQ 
 What topologies are available?  
+
 ```
-topologies/
+inventories/
+.
 ├── cisco_ios
-│   ├── multisite_site1.yaml
-│   ├── multisite_site2.yaml
-│   └── multisite_site3.yaml
-├── default.yaml
+│   ├── group_vars
+│   │   ├── site1.yaml
+│   │   ├── site2.yaml
+│   │   └── site3.yaml
+│   └── hosts
 ├── f5_tmos
-│   └── loadbalance.yaml
+│   ├── group_vars
+│   │   └── site1.yaml
+│   └── hosts
+├── full
+│   ├── group_vars
+│   │   └── all.yaml
+│   └── hosts
 ├── infoblox_nios
-│   └── ipam_ios.yaml
+│   ├── group_vars
+│   │   └── site1.yaml
+│   └── hosts
 ├── microsoft_windows
-│   └── server.yaml
+│   ├── group_vars
+│   │   └── site1.yaml
+│   └── hosts
 ├── paloalto_panos
-│   └── firewall.yaml
+│   ├── group_vars
+│   │   └── site1.yaml
+│   └── hosts
 ├── redhat_rhel
-│   └── server.yaml
+│   ├── group_vars
+│   │   └── site1.yaml
+│   └── hosts
 └── splunk_es
-    └── logging.yaml
+    ├── group_vars
+    │   └── site1.yaml
+    └── hosts
 ```
 
 Why the public access to Infoblox's WEBUI is not working?
 > Due to a limitation in the Infoblox's image, **the Infoblox AMI is only accessible through the `inside` interface (LAN1).**.  
-> As workaround, you can create a SSH tunnel from your machine, in order to be able to access Infoblox's WEBUI:  
+> As alternative, create a SSH tunnel to access Infoblox's WEBUI:  
 > - Add ssh-key to ssh-agent:
->   - `ssh-add keychain/<ssh_private_key_file>` 
+>   - `ssh-add files/keychain/<ssh_private_key_file>` 
 > - Establish SSH Tunnel (localhost:8443 -> 10.1.2.97:443):
 >   - `ssh -l ec2-user@<tower_public_ip> -L 8443:10.1.2.97:443`
 > - Open Browser:
 >   - `open -a "Google Chrome" https://localhost:8443/`
 
 _What are the overall steps happening in background?_
-> 1. [`Build`](##Build): Runs locally, calling the role [`build`](runner/roles/build/).
-> 2. [`Provision`](##Provision): Runs locally, calling the role [`provision`](runner/roles/provision).
-> 3. [`Deploy`](##Deploy): Runs against the provisioned device, calling the role [`deploy`](runner/roles/deploy).
+> 1. [`Build`](##Build): Runs locally, calling the role [`build`](roles/build/).
+> 2. [`Provision`](##Provision): Runs locally, calling the role [`provision`](roles/provision/).
+> 3. [`Deploy`](##Deploy): Runs against the provisioned device, calling the role [`deploy`](roles/deploy/).
 
 _What happens behind the scenes? What is the logical path of the topology when i run `main.yaml`?_
-> - _[`main.yaml`](runner/project/main.yaml):_
->    - _[`build.yaml`](runner/project/build.yaml):_
+> - _[`main.yaml`](main.yaml):_
+>    - _[`build.yaml`](build.yaml):_
 >      - _roles:_
->        - _[`build`](runner/roles/build):_
+>        - _[`build`](roles/build/):_
 >          - _[`download`](https://galaxy.ansible.com/victorock/download)_
->    - _[`provision.yaml`](runner/projectprovision.yaml):_
+>    - _[`provision.yaml`](projectprovision.yaml):_
 >      - _roles:_
->        - _[`provision`](runner/roles/provision):_
->          - _[`provision_ec2`](runner/roles/provision_ec2):_
->              - _[`inventory/group_vars/all/ec2.yaml`](runner/inventory/group_vars/all/ec2.yaml)_
->              - _[`inventory/group_vars/tower/ec2.yaml`](runner/inventory/group_vars/tower/ec2.yaml)_
->              - _[`inventory/group_vars/linux/ec2.yaml`](runner/inventory/group_vars/linux/ec2.yaml)_
->              - _[`host_vars/host01-tower/ec2.yaml`](runner/inventory/group_vars/host01-tower/ec2.yaml)_
->              - _[`host_vars/host01-linux/ec2.yaml`](runner/inventory/group_vars/host01-linux/ec2.yaml)_
->    - _[`deploy.yaml`](runner/roles/deploy):_
+>        - _[`provision`](roles/provision/):_
+>          - _[`provision_ec2`](roles/provision_ec2/):_
+>              - _[`inventories/group_vars/all/ec2.yaml`](inventories/group_vars/all/ec2.yaml)_
+>              - _[`inventories/group_vars/tower/ec2.yaml`](inventories/group_vars/tower/ec2.yaml)_
+>              - _[`inventories/group_vars/linux/ec2.yaml`](inventories/group_vars/linux/ec2.yaml)_
+>              - _[`host_vars/host01-tower/ec2.yaml`](inventories/host_vars/host01-tower/ec2.yaml)_
+>              - _[`host_vars/host01-linux/ec2.yaml`](inventories/host_vars/host01-linux/ec2.yaml)_
+>    - _[`deploy.yaml`](roles/deploy):_
 >      - _roles:_
->        - _[`deploy_tower`](runner/roles/deploy_tower):_ 
->          - _[`deploy_linux`](runner/roles/deploy_linux):_
+>        - _[`deploy_tower`](roles/deploy_tower/):_ 
+>          - _[`deploy_linux`](roles/deploy_linux/):_
 >              - _network configuration_
 >              - _baseline packages_
 >              - _repositories (redhat-rhui)_
 >              - _subscription (optional)_
 >          - _[`tower_setup`](https://galaxy.ansible.com/victorock/tower_setup):_
->            - _[`inventory/group_vars/tower/ansible_tower_setup.yaml`](runner/inventory/group_vars/tower/ansible_tower_setup.yaml)_ 
+>            - _[`inventories/group_vars/tower/ansible_tower_setup.yaml`](inventories/group_vars/tower/ansible_tower_setup.yaml)_ 
 >          - _[`tower_configure`](https://galaxy.ansible.com/victorock/tower_config):_
->            - _[`inventory/group_vars/tower/ansible_tower_config.yaml`](runner/inventory/group_vars/tower/ansible_tower_config.yaml)_ 
+>            - _[`inventories/group_vars/tower/ansible_tower_config.yaml`](inventories/group_vars/tower/ansible_tower_config.yaml)_ 
 >          - _[`tower_facts`](https://galaxy.ansible.com/victorock/tower_facts)_
->    - _[`test.yaml`](runner/roles/test):_
+>    - _[`test.yaml`](roles/test):_
 >      - _roles:_
->        - _[`test_tower`](runner/roles/test_tower):_  
+>        - _[`test_tower`](roles/test_tower):_  
 >          - _application tests_
 
-#### Build
-What the [`Build`](runner/project/roles/build) playbook does ?  
-[`Build`](runner/project/roles/build) **environment's** resources **locally**:
-- `download files...`
-- `create files...`
-- `compile code...`
-- `etc...`
-
-#### Provision
-What the [`Provision`](runner/project/provision.yaml) playbook does ?  
-> [`Provision`](runner/project/provision.yaml) the following [environment's](####Environments) resources:  
-> - [Amazon Web Services](https://aws.amazon.com):
->   - [`vpc`](runner/roles/provision_ec2/present/)
->   - [`subnets`](runner/roles/provision_ec2/present)
->   - [`gateways`](runner/roles/provision_ec2/present/)
->   - [`enis`](runner/roles/provision_ec2/present/)
->   - [`eips`](runner/roles/provision_ec2/present/)
->   - [`instances`](runner/roles/provision_ec2/present/)  
-
-> There are two types of `nodes` to provision in [`provision_ec2`](runner/project/roles/provision_ec2):
-> - [`network`](runner/project/roles/provision_ec2/present/network.yaml) with **3 Network interfaces**.
-> - [`host`](runner/project/roles/provision_ec2/present/host.yaml) with **2 Network interfaces**.
-
-#### Deploy
-What the [`Deploy`](runner/project/deploy.yaml) playbook does ?  
-> [`Deploy`](runner/project/deploy.yaml) the [**environments**](####Environments).  
-> For each environment the role `deploy_<environment>` shall exist to perform environment specific tasks.
-> Follow below roles in charge of environment specific deployments:  
->   - [`deploy_linux`](runner/project/roles/deploy_linux)
->   - [`deploy_tower`](runner/project/roles/deploy_tower)
->   - [`deploy_splunk`](runner/project/roles/deploy_splunk)
->   - [`deploy_nios`](runner/project/roles/deploy_nios)
-
-#### Unprovision
-What the [`Unprovision`](runner/project/unprovision.yaml) playbook does ?  
-> [`Unprovision`](runner/project/unprovision.yaml) the following [environment's](####Environments) resources:  
-> - [Amazon Web Services](https://aws.amazon.com):
->   - [`enis`](runner/roles/provision_ec2/terminated/)
->   - [`eips`](runner/roles/provision_ec2/terminated/)
->   - [`instances`](runner/roles/provision_ec2/terminated/)  
-
-#### Teardown
-What the [`Teardown`](runner/project/teardown.yaml) playbook does ?  
-> [`Teardown`](runner/project/teardown.yaml) the following [environment's](####Environments) resources:  
-> - [Amazon Web Services](https://aws.amazon.com):
->   - [`vpc`](runner/roles/provision_ec2/absent/)
->   - [`subnets`](runner/roles/provision_ec2/absent)
->   - [`gateways`](runner/roles/provision_ec2/absent/)
->   - [`enis`](runner/roles/provision_ec2/absent/)
->   - [`eips`](runner/roles/provision_ec2/absent/)
->   - [`instances`](runner/roles/provision_ec2/absent/)  
-
-#### Reprovision
-What the [`Reprovision`](runner/project/remain.yaml) playbook does ?  
-> [`Terminate`](###Terminate) then [`Provision`](###Provision).  
+## Additional Details
+- [Playbooks](playbooks/README.md)
+- [Roles](roles/README.md)
 
 ## TODO
 deploy_\<environment\> for the following:
@@ -284,6 +276,3 @@ Performing the following tasks:
 
 ## Disclaimer  
 Don't use any of the content from this repository to manage real production environments.  
-
-## Future 
-Split the content of this repository in different repositories, adopting a lab/topology/scenario oriented approach.

@@ -1,0 +1,7 @@
+---
+- name: "Generate ssh-key"
+  become: false
+  run_once: true
+  shell: "ssh-keygen -m PEM -t rsa -f files/keychain/{{ build_sshkey_name }} -N ''"
+  args:
+    creates: "files/keychain/{{ build_sshkey_name }}"

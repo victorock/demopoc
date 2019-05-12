@@ -1,0 +1,145 @@
+---
+# Tasks here are not friendly to parallelism...
+# without run_once: true you may end up with multiple vpcs with the same specs
+- name: "Gather VPC facts"
+  run_once: true
+  delegate_to: localhost
+  ec2_vpc_net_facts:
+    aws_access_key: "{{ ec2_aws_access_key | default(omit, True) }}"
+    aws_secret_key: "{{ ec2_aws_secret_key | default(omit, True) }}"
+    region: "{{ ec2_region }}"
+    filters:
+      "cidr": "{{ ec2_vpc_cidr }}"
+      "tag:Name": "{{ ec2_vpc_name }}"
+  register: r_ec2_vpc_net_facts
+
+- name: "Disassociate internet gateway to vpc"
+  run_once: true
+  delegate_to: localhost
+  ec2_vpc_igw:
+    aws_access_key: "{{ ec2_aws_access_key | default(omit, True) }}"
+    aws_secret_key: "{{ ec2_aws_secret_key | default(omit, True) }}"
+    region: "{{ ec2_region }}"
+    vpc_id: "{{ item.vpc_id }}"
+    state: "absent"
+  loop: "{{ r_ec2_vpc_net_facts.vpcs }}"
+  loop_control:
+    label: "vpc: {{ item.vpc_id }}"
+
+- name: "Destroy MGMT subnet"
+  run_once: true
+  delegate_to: localhost
+  ec2_vpc_subnet:
+    aws_access_key: "{{ ec2_aws_access_key | default(omit, True) }}"
+    aws_secret_key: "{{ ec2_aws_secret_key | default(omit, True) }}"
+    region: "{{ ec2_region }}"
+    vpc_id: "{{ item.vpc_id }}"
+    cidr: "{{ ec2_vpc_subnet_mgmt }}"
+    state: "absent"
+  loop: "{{ r_ec2_vpc_net_facts.vpcs }}"
+  loop_control:
+    label: "vpc: {{ item.vpc_id }}"
+
+- name: "Destroy route table for zone mgmt"
+  run_once: true
+  delegate_to: localhost
+  ec2_vpc_route_table:
+    aws_access_key: "{{ ec2_aws_access_key | default(omit, True) }}"
+    aws_secret_key: "{{ ec2_aws_secret_key | default(omit, True) }}"
+    region: "{{ ec2_region }}"
+    vpc_id: "{{ item.vpc_id }}"
+    tags:
+      Environment: "{{ ec2_vpc_name }}"
+      Zone: "mgmt"
+    state: "absent"
+  loop: "{{ r_ec2_vpc_net_facts.vpcs }}"
+  loop_control:
+    label: "vpc: {{ item.vpc_id }}"
+
+- name: "Delete Subnet: Outside"
+  run_once: true
+  delegate_to: localhost
+  ec2_vpc_subnet:
+    aws_access_key: "{{ ec2_aws_access_key | default(omit, True) }}"
+    aws_secret_key: "{{ ec2_aws_secret_key | default(omit, True) }}"
+    region: "{{ ec2_region }}"
+    vpc_id: "{{ item.vpc_id }}"
+    cidr: "{{ ec2_vpc_subnet_outside }}"
+    state: "absent"
+  loop: "{{ r_ec2_vpc_net_facts.vpcs }}"
+  loop_control:
+    label: "vpc: {{ item.vpc_id }}"
+
+- name: "Delete Route Table: Zone Outside"
+  run_once: true
+  delegate_to: localhost
+  ec2_vpc_route_table:
+    aws_access_key: "{{ ec2_aws_access_key | default(omit, True) }}"
+    aws_secret_key: "{{ ec2_aws_secret_key | default(omit, True) }}"
+    region: "{{ ec2_region }}"
+    vpc_id: "{{ item.vpc_id }}"
+    tags:
+      Environment: "{{ ec2_vpc_name }}"
+      Zone: "outside"
+    state: "absent"
+  loop: "{{ r_ec2_vpc_net_facts.vpcs }}"
+  loop_control:
+    label: "vpc: {{ item.vpc_id }}"
+
+- name: "Delete Subnet: Inside"
+  run_once: true
+  delegate_to: localhost
+  ec2_vpc_subnet:
+    aws_access_key: "{{ ec2_aws_access_key | default(omit, True) }}"
+    aws_secret_key: "{{ ec2_aws_secret_key | default(omit, True) }}"
+    region: "{{ ec2_region }}"
+    vpc_id: "{{ item.vpc_id }}"
+    cidr: "{{ ec2_vpc_subnet_inside }}"
+    state: "absent"
+  loop: "{{ r_ec2_vpc_net_facts.vpcs }}"
+  loop_control:
+    label: "vpc: {{ item.vpc_id }}"
+
+- name: "Delete Route Table: Zone Inside"
+  run_once: true
+  delegate_to: localhost
+  ec2_vpc_route_table:
+    aws_access_key: "{{ ec2_aws_access_key | default(omit, True) }}"
+    aws_secret_key: "{{ ec2_aws_secret_key | default(omit, True) }}"
+    region: "{{ ec2_region }}"
+    vpc_id: "{{ item.vpc_id }}"
+    tags:
+      Environment: "{{ ec2_vpc_name }}"
+      Zone: "inside"
+    state: "absent"
+  loop: "{{ r_ec2_vpc_net_facts.vpcs }}"
+  loop_control:
+    label: "vpc: {{ item.vpc_id }}"
+
+- name: "Delete Security Group"
+  run_once: true
+  delegate_to: localhost
+  ec2_group:
+    aws_access_key: "{{ ec2_aws_access_key | default(omit, True) }}"
+    aws_secret_key: "{{ ec2_aws_secret_key | default(omit, True) }}"
+    region: "{{ ec2_region }}"
+    name: "{{ ec2_group }}"
+    vpc_id: "{{ item.vpc_id }}"
+    state: "absent"
+  loop: "{{ r_ec2_vpc_net_facts.vpcs }}"
+  loop_control:
+    label: "vpc: {{ item.vpc_id }}"
+
+- name: "Delete VPC"
+  run_once: true
+  delegate_to: localhost
+  ec2_vpc_net:
+    aws_access_key: "{{ ec2_aws_access_key | default(omit, True) }}"
+    aws_secret_key: "{{ ec2_aws_secret_key | default(omit, True) }}"
+    name: "{{ ec2_vpc_name }}"
+    cidr_block: "{{ item.cidr_block }}"
+    region: "{{ ec2_region }}"
+    state: "absent"
+  loop: "{{ r_ec2_vpc_net_facts.vpcs }}"
+  loop_control:
+    label: "vpc: {{ item.vpc_id }}"

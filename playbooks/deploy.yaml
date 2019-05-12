@@ -1,0 +1,11 @@
+#!/usr/bin/env ansible-playbook
+---
+- name: "Deploy"
+  hosts: "all"
+  # ansible_gather_facts from inventory is not being respected :(
+  gather_facts: false
+#  vars:    
+#    ansible_gather_facts: false
+  roles:
+    - role: "self"
+      function: "deploy"

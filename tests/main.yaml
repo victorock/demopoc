@@ -1,0 +1,7 @@
+---
+# 1st: For build, provision, deploy
+- import_playbook: ../playbooks/main.yaml
+# 2nd: For idempotency of build, provision, deploy
+- import_playbook: ../playbooks/main.yaml
+# 3rd: Destroy
+- import_playbook: ../playbooks/teardown.yaml

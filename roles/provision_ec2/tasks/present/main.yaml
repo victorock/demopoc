@@ -1,0 +1,30 @@
+- name: "Ensure vpc state as {{ ec2_state }}"
+  include_tasks: "vpc.yaml"
+
+- name: "Ensure state of instance's common resources"
+  include_tasks: "instance.yaml"
+
+- name: "Ensure instance's role state"
+  include_tasks: "{{ ec2_instance_role }}.yaml"
+
+- name: "Add-host to in-memory inventory"
+  # BYPASS_HOST_LOOP is implemented to this module...
+  # so this module only run_once
+  add_host:
+    name: "{{ inventory_hostname }}"
+    ansible_host: "{{ hostvars[hostvar].ansible_host }}"
+  loop: "{{ play_hosts }}"
+  loop_control:
+    loop_var: hostvar
+    label: "host: {{ hostvar }}"
+
+# Connection Reset is not implemented for connection: localhost
+# the next group of tasks must validate connectivity...
+#- name: "Wait for connection"
+#  wait_for_connection:
+#    delay: "10"
+#    timeout: "900"
+
+- name: "Ready"
+  debug:
+    msg: "{{ ec2_instance_name }}: ssh {{ ansible_user }}@{{ ansible_host }} -i files/keychain/{{ ec2_vpc_name }}"

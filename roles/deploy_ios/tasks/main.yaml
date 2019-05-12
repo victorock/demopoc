@@ -1,0 +1,7 @@
+---
+- name: "Deploy ios"
+  ios_config:
+    src: "config.cfg.j2"
+
+- name: "Flush Handlers"
+  meta: flush_handlers

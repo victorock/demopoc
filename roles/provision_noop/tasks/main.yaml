@@ -1,0 +1,4 @@
+---
+- name: "provision_noop"
+  debug:
+    msg: "provision_provider not specified, doing nothing..."

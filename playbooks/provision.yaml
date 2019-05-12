@@ -1,0 +1,12 @@
+#!/usr/bin/env ansible-playbook
+---
+- name: "Provision"
+  hosts: "all"
+  # ansible_gather_facts from inventory is not being respected :(
+  gather_facts: false
+  vars:
+    ansible_connection: "local"
+  roles:
+    - role: "self"
+      function: "provision"
+      provision_state: "present"

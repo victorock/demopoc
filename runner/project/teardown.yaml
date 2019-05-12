@@ -1,9 +1,0 @@
----
-- name: "Teardown"
-  hosts: "{{ environments }}"
-  vars:
-    ansible_connection: "local"
-    ansible_gather_facts: false
-  roles:
-    - role: "provision"
-      provision_state: "absent"

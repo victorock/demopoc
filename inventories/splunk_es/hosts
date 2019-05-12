@@ -1,0 +1,25 @@
+---
+all:
+  hosts:
+    host01-tower:
+    host01-linux:
+    host01-splunk:
+  children:
+    host:
+      children:
+        tower:
+          hosts:
+            host01-tower:
+        linux:
+          hosts:
+            host01-linux:
+        splunk:
+          hosts:
+            host01-splunk:
+    sites:
+      children:
+        site1:
+          hosts:
+            host01-tower:
+            host01-linux:
+            host01-splunk:

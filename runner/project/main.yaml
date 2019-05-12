@@ -1,4 +1,0 @@
----
-- import_playbook: build.yaml
-- import_playbook: provision.yaml
-- import_playbook: deploy.yaml

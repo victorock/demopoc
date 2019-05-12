@@ -1,4 +1,0 @@
----
-- name: "Call test_provider"
-  include_role:
-    name: "{{ test_provider }}"

@@ -1,0 +1,29 @@
+---
+all:
+  hosts:
+    host01-tower:
+    host01-linux:
+    fw01-panos:
+  children:
+    host:
+      children:
+        tower:
+          hosts:
+            host01-tower:
+        linux:
+          hosts:
+            host01-linux:
+    network:
+      children:
+        firewall:
+          children:
+            panos:
+              hosts:
+                fw01-panos:
+    sites:
+      children:
+        site1:
+          hosts:
+            host01-tower:
+            host01-linux:
+            fw01-panos:

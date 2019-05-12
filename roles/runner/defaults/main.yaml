@@ -1,8 +1,0 @@
----
-runner_playbook: "main"
-runner_action: "start"
-runner_private_data_dir: "runner"
-runner_rotate_artifacts: "0"
-# Requires bubblewrap
-runner_process_isolation: false
-runner_directory_isolation_base_path: "/tmp"

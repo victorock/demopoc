@@ -1,0 +1,9 @@
+hostname {{ inventory_hostname }}
+interface GigabitEthernet2
+  description "outside"
+  ip address dhcp
+  no shutdown
+interface GigabitEthernet3
+  description "inside"
+  ip address dhcp
+  no shutdown

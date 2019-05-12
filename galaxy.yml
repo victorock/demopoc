@@ -1,0 +1,17 @@
+---
+namespace: "victorock"
+name: "demopoc"
+version: "v0.1"
+authors: 
+  - "Victor da Costa @victorobotz:twitter"
+description: "Provisioner of Demo Environments"
+license: "GPL-3.0-or-later"
+tags:
+  - "lab"
+  - "provision"
+  - "cloud"
+dependencies:
+  - "victorock.tower"
+  - "paloaltonetworks.paloaltonetworks"
+  - "victorock.download"
+repository: "https://github.com/victorock/demopoc"

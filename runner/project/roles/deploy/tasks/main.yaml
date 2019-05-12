@@ -1,4 +1,0 @@
----
-- name: "Call deploy_provider"
-  include_role:
-    name: "{{ deploy_provider }}"

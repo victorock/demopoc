@@ -1,0 +1,3 @@
+---
+build_sshkey_name: "{{ ec2_vpc_name }}"
+

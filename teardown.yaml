@@ -1,9 +1,0 @@
-#!/usr/bin/env ansible-playbook
----
-- name: "Demopoc"
-  hosts: localhost
-  connection: local
-  gather_facts: no
-  roles:
-    - role: runner
-      runner_playbook: "teardown"

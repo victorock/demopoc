@@ -1,0 +1,18 @@
+---
+- name: set role supported functions
+  set_fact:
+    demopoc_functions:
+      - build
+      - deploy
+      - provision
+      - test
+      - noop
+
+- name: validate the requested function is supported
+  fail:
+    msg: "invalid function specified, expected one of {{ demopoc_functions }}, got {{ function }}"
+  when: function | default('noop') not in demopoc_functions
+
+- name: "include function specific tasks and run"
+  include_tasks: "{{ function  | default('noop') }}.yaml"
+
