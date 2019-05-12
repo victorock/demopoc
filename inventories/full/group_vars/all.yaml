@@ -3,7 +3,7 @@
 ec2_region: "eu-central-1"
 
 # VPC Name
-ec2_vpc_name: "demopoc"
+ec2_vpc_name: "site1"
 
 # Network CIDR
 ec2_vpc_cidr: "10.1.0.0/16"

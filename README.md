@@ -64,116 +64,140 @@ The content of this repository is subdivided in the following categories:
 | `10.1.0.96`  | `10.1.2.96`    | `splunk`   | `host01-splunk`    |  
 
 ## Preparation
-### General
+### Installation of the following packages:
+- [ansible](https://pypi.org/ansible/)
+- [netaddr](https://pypi.org/netaddr/)
+- [boto](https://pypi.org/boto/)
+- [boto3](https://pypi.org/boto3/)
+- [passlib](https://pypi.org/passlib/)  
 
-Installation of the following packages:
-> - [ansible](https://pypi.org/ansible/)
-> - [ansible-runner](https://pypi.org/ansible-runner/)
-> - [netaddr](https://pypi.org/netaddr/)
-> - [boto](https://pypi.org/boto/)
-> - [boto3](https://pypi.org/boto3/)
-> - [passlib](https://pypi.org/passlib/)
+### Installation as normal user:
+```
+pip --user install ansible netaddr boto boto3 passlib
+```
 
-- Installation as normal user:
-> `pip --user install ansible ansible-runner netaddr boto boto3 passlib`
+### Installation as privileged user or from inside a `virtualenv`:
+```
+pip install ansible netaddr boto boto3 passlib
+```
 
-- Installation as privileged user or from inside a `virtualenv`:
-> `pip install ansible ansible-runner netaddr boto boto3 passlib`
-
-### Environments
-### AWS
-Open a ticket and request to increase the number of `Elastic IPs` for your account.  
-By default AWS only allows 5 `Elastic IPs` per VPC, meanwhile some labs may required more.  
-Reference: [Elastic IP Addresses (IPv4)](https://docs.aws.amazon.com/vpc/latest/userguide/amazon-vpc-limits.html)  
-
-#### Tower
-Request `Red Hat Ansible Tower` subscription [here](https://www.ansible.com/license):
-  - **Save** the _`license`_ **file** in _`files/licenses/tower`_.
-
-### Infoblox
-**Accept** the following subscriptions:
-  - NIOS CP (**required**): Click [_Continue to Subscribe_](https://aws.amazon.com/marketplace/pp/B0182WYGRA)
-  - NIOS TE (_optional_): Click [_Continue to Subscribe_](https://aws.amazon.com/marketplace/pp/B0182WYFQC)
-
-### Cisco
-**Accept** the following subscriptions:
-  - ASAv BYOL (**required**): Click [_Continue to Subscribe_](https://aws.amazon.com/marketplace/pp/B00WRGASUC)
-  - ASAv (_optional_): Click [_Continue to Subscribe_](https://aws.amazon.com/marketplace/pp/B00WH2LGM0)
-
-### F5
-**Accept** the following subscriptions:
-  - BigIP PAYG (**required**): Click [_Continue to Subscribe_](https://aws.amazon.com/marketplace/pp/B079C44MFH)
-  - BigIP BYOL (_optional_): Click [_Continue to Subscribe_](https://aws.amazon.com/marketplace/pp/B00KXHN9GC)
-
-### PaloAlto
-**Accept** the following subscriptions:
-  - Firewall BYOL (**required**): Click [_Continue to Subscribe_](https://aws.amazon.com/marketplace/pp/B00OC1T2D4)
-  - Firewall 1 (_optional_): Click [_Continue to Subscribe_](https://aws.amazon.com/marketplace/pp/B00PJ2VDFA)
-  - Firewall 2 (_optional_): Click [_Continue to Subscribe_](https://aws.amazon.com/marketplace/pp/B00PJ2V04O)
-
-### Splunk
-**Accept** the following subscriptions:
-  - Insights for Infrastructure (_optional_): Click [_Continue to Subscribe_](https://aws.amazon.com/marketplace/pp/B07GJ4JD93)
-  - Enterprise (**required**): Click [_Continue to Subscribe_](https://aws.amazon.com/marketplace/pp/B00PUXWXNE)
-
-### Fortinet
-**Accept** the following subscriptions:
-  - Fortigate (**required**): Click [_Continue to Subscribe_](https://aws.amazon.com/marketplace/pp/B00PCZSWDA)
+### Licenses and Subscriptions
+| Environment | Instructions |
+| :------- | :------ |
+| AWS | AWS Support ticket to increase **Elastic IPs** to **30**. <br>Default: 5 ([Reference](https://docs.aws.amazon.com/vpc/latest/userguide/amazon-vpc-limits.html)) |
+| Ansible Tower | [Red Hat Ansible Tower license](https://www.ansible.com/license) (**required**). <br> - **Save** the _`license`_ **file** in _`files/licenses/tower`_. |
+| Infoblox | - [NIOS CP](https://aws.amazon.com/marketplace/pp/B0182WYGRA) (**required**). <br> - [NIOS TE](https://aws.amazon.com/marketplace/pp/B0182WYFQC) (_optional_). |
+| Cisco | - [ASAv BYOL](https://aws.amazon.com/marketplace/pp/B00WRGASUC) (**required**). <br> - [ASAv](https://aws.amazon.com/marketplace/pp/B00WH2LGM0) (_optional_). |
+| F5 | - [BigIP PAYG](https://aws.amazon.com/marketplace/pp/B079C44MFH) (**required**). <br> - [BigIP BYOL](https://aws.amazon.com/marketplace/pp/B00KXHN9GC) (_optional_) |
+| PaloAlto |  - [Firewall BYOL](https://aws.amazon.com/marketplace/pp/B00OC1T2D4) (**required**). <br> - [Firewall 1](https://aws.amazon.com/marketplace/pp/B00PJ2VDFA) (_optional_). <br> - [Firewall 2](https://aws.amazon.com/marketplace/pp/B00PJ2V04O) (_optional_) |
+| Splunk | - [Enterprise](https://aws.amazon.com/marketplace/pp/B00PUXWXNE) (**required**). <br> - [Insights for Infrastructure](https://aws.amazon.com/marketplace/pp/B07GJ4JD93) (_optional_). |
+| Fortinet | - [Fortigate](https://aws.amazon.com/marketplace/pp/B00PCZSWDA) (**required**).
 
 ## Howtos
+### Create my own topology
+> _NOTE: In Ansible Tower do standard WEBUI manipulation of Inventories._
+1. Copy the directory [inventories/full](inventories/full/) to `inventories/mytopology`.  
+```
+cp -ap inventories/full inventories/mytopology
+```
+2. Edit the file [inventories/mytopology/hosts](inventories/full/hosts) to choose the nodes in your topology.  
+```
+vi inventories/mytopology/hosts
+```
+3. Edit the file [inventories/mytopology/group_vars/all.yaml](inventories/full/group_vars/all.yaml) to customize subnets, vpcs, regions...    
+```
+vi inventories/mytopoly/group_vars/all.yaml
+```
+> _NOTE: For multisite topology, consult [cisco_ios](inventories/cisco_ios/)_
 
-How to create my own `topology`?
-> - Copy the directory [`inventories/full`](inventories/full) to `inventories/mytopology`.  
-> - Edit the file [`inventories/mytopology/hosts`](inventories/full/hosts) to choose the nodes in your topology.  
-> - Edit the file [`inventories/mytopology/group_vars/all.yaml`](inventories/full/group_vars/all.yaml) to customize subnets, vpcs, regions...    
-> - For multisite topology, consult [`cisco_ios`](inventories/cisco_ios/)
+### Define my own ssh-keys  
+1. Save the **public ssh_key** in `files/keychain/<ec2_vpc_name>.pub`.
+```
+cp <my key>.pub files/keychain/site1.pub
+cp <my key>.pub files/keychain/site2.pub
+cp <my key>.pub files/keychain/site3.pub
+```
+2. Save the **private ssh_key** in `files/keychain/<ec2_vpc_name>`.  
+```
+cp <my key> files/keychain/site1
+cp <my key> files/keychain/site2
+cp <my key> files/keychain/site3
+```
+> _NOTE: if missing, ssh-keys are generated automatically during `build`_  
 
-How to define my own ssh-keys?  
-_NOTE: if missing, ssh-keys are generated automatically_
-> - Copy the **public ssh_key** in `files/keychain/<ec2_vpc_name>.pub`.
-> - Copy the **private ssh_key** in `files/keychain/<ec2_vpc_name>`.  
+### Spawn the entire topology
+```
+./playbooks/main.yaml -i inventories/full
+```  
+> _NOTE: By default everything is provisioned in [site1](inventories/full/all.yaml).  
 
-How to **`build`, `provision`** and **`deploy` all nodes**:
-> - `./playbooks/main.yaml -i inventories/full`  
+### Provision all nodes from topology
+```
+./playbooks/provision.yaml -i inventories/full
+```  
+> _NOTE: ssh-key are only generated during [build](roles/build/).
 
-How to spawn `specific topologies`?
-> In order to **`build`, `provision`** and **`deploy specific environment`** in the topology:  
-> - `./playbooks/main.yaml -i inventories/cisco_ios`  
+### Provision specific group from topology
+```
+./playbooks/provision.yaml -i inventories/full --limit linux
+```  
+> _NOTE: ssh-key are only generated during `build`.
 
-How to manipulate `specific nodes`?
-> Hence topology is build on top of inventory, there is no magic:
-> - In order to **`terminate`** a group (`ex: site1`) in the topology:  
->   - `s`  
-> - In order to **`provision`** a group (`ex: tower`) in the topology:  
->   - `./playbooks/terminate.yaml -i inventories/cisco_ios --limit tower`  
-> - In order to **`reprovision`** a `node` in the topology:  
->   - `./playbooks/reprovision.yaml -i inventories/cisco_ios --limit rtr01-ios`  
-> - In order to **`reprovision`** a group (`ex: ios`) in the topology:  
->   - `./playbooks/reprovision.yaml -i inventories/cisco_ios --limit ios`  
+### Spawn different topology
+```
+./playbooks/main.yaml -i inventories/redhat_rhel
+```  
+> _HINT: Topologies are build from [inventories](inventories/) 
 
-How to stack topologies together?
-> **NOTES:**
->   - **Multiple sites cannot be provisioned in parallel in the same play because of race conditions**  
->   - **Multiple instances are provisioned in parallel.**  
->   - **Mutiple sites can be provisioned in parallel from different terminals with different --limit.**  
+### Terminate specific group of nodes (`ex: site1`)  
+```
+./playbooks/terminate.yaml -i inventories/cisco_ios --limit site1
+```  
 
-> If the topology follows the guideline for groups and vpc names, then the process is straighforward:
-> - To provision the `cisco_ios`, which includes 3 sites, where site1 is the main site:
->   - `./playbooks/provision.yaml -i inventories/cisco_ios --limit site1`  
->   - `./playbooks/provision.yaml -i inventories/cisco_ios --limit site2`  
->   - `./playbooks/provision.yaml -i inventories/cisco_ios --limit site3`  
-> - To provision Infoblox on top of the previous topology:
->   - `./playbooks/provision.yaml -i inventories/infoblox_nios`  
-> - To provision Splunk on top of the previous topology:
->   - `./playbooks/provision.yaml -i inventories/splunk_es`  
+### Provision specific group of nodes (`ex: tower`)  
+```
+./playbooks/provision.yaml -i inventories/cisco_ios --limit tower
+```  
 
-How to integrate with Ansible Tower?
-> Create a project for `https://www.github.com/victorock/demopoc`.  
-> Create an inventory and define a source from project (`ex: inventories/cisco_ios/hosts`).  
-> Create a `job template` and choose a playbook from `playbooks` (`ex: playbooks/main.yaml`).
+### Reprovision specific node (`ex: rtr01-ios`)  
+```
+./playbooks/reprovision.yaml -i inventories/cisco_ios --limit rtr01-ios
+```  
 
-### FAQ 
-What topologies are available?  
+### Reprovision specific group of nodes (`ex: ios`)   
+```
+./playbooks/reprovision.yaml -i inventories/cisco_ios --limit ios
+```  
+
+### Stack topologies
+This is straighforward for topologies following the guideline for groups and vpc names.
+1. To spawn the `cisco_ios` with 3 sites:
+```
+./playbooks/main.yaml -i inventories/cisco_ios --limit site1
+./playbooks/main.yaml -i inventories/cisco_ios --limit site2  
+./playbooks/main.yaml -i inventories/cisco_ios --limit site3
+```  
+> **NOTE: Multiple sites cannot be provisioned in parallel as part of the same play, because of race conditions**  
+> **NOTE: Mutiple sites can be provisioned in parallel from different terminals with different --limit.**  
+> **NOTE: Multiple instances are provisioned in parallel.**  
+
+2. To provision `Infoblox` on top of the previous topology:
+```
+./playbooks/main.yaml -i inventories/infoblox_nios
+```  
+
+3. To provision `Splunk` on top of the previous topology:
+```
+./playbooks/main.yaml -i inventories/splunk_es
+```  
+
+### Integration with Ansible Tower
+1. Create `project` for `https://www.github.com/victorock/demopoc`.  
+2. Create `inventory` and define a `source from project` for `inventories/cisco_ios/hosts`.  
+3. Create `job template` and choose a playbook from `playbooks` folder (`ex: playbooks/main.yaml`).
+
+## FAQ 
+### What topologies are available?  
 
 ```
 inventories/
@@ -186,7 +210,7 @@ inventories/
 │   └── hosts
 ├── f5_tmos
 │   ├── group_vars
-│   │   └── site1.yaml
+│   │   └── all.yaml
 │   └── hosts
 ├── full
 │   ├── group_vars
@@ -194,72 +218,78 @@ inventories/
 │   └── hosts
 ├── infoblox_nios
 │   ├── group_vars
-│   │   └── site1.yaml
+│   │   └── all.yaml
 │   └── hosts
 ├── microsoft_windows
 │   ├── group_vars
-│   │   └── site1.yaml
+│   │   └── all.yaml
 │   └── hosts
 ├── paloalto_panos
 │   ├── group_vars
-│   │   └── site1.yaml
+│   │   └── all.yaml
 │   └── hosts
 ├── redhat_rhel
 │   ├── group_vars
-│   │   └── site1.yaml
+│   │   └── all.yaml
 │   └── hosts
 └── splunk_es
     ├── group_vars
-    │   └── site1.yaml
+    │   └── all.yaml
     └── hosts
 ```
 
-Why the public access to Infoblox's WEBUI is not working?
-> Due to a limitation in the Infoblox's image, **the Infoblox AMI is only accessible through the `inside` interface (LAN1).**.  
-> As alternative, create a SSH tunnel to access Infoblox's WEBUI:  
-> - Add ssh-key to ssh-agent:
->   - `ssh-add files/keychain/<ssh_private_key_file>` 
-> - Establish SSH Tunnel (localhost:8443 -> 10.1.2.97:443):
->   - `ssh -l ec2-user@<tower_public_ip> -L 8443:10.1.2.97:443`
-> - Open Browser:
->   - `open -a "Google Chrome" https://localhost:8443/`
+### Why the public access to Infoblox's WEBUI is not working?
+Due to a limitation in the Infoblox's image, **the Infoblox AMI is only accessible through the `inside` interface (LAN1).**.  
+As alternative, create a SSH tunnel through Ansible Tower to access Infoblox's WEBUI:  
+1. Add ssh-key to ssh-agent:
+```
+ssh-add files/keychain/<ssh_private_key_file>
+``` 
+2. Establish SSH Tunnel (localhost:8443 -> 10.1.2.97:443):
+```
+ssh -l ec2-user@<tower_public_ip> -L 8443:10.1.2.97:443
+```
+3. Open Browser:
+```
+open -a "Google Chrome" https://localhost:8443/
+```
 
-_What are the overall steps happening in background?_
-> 1. [`Build`](##Build): Runs locally, calling the role [`build`](roles/build/).
-> 2. [`Provision`](##Provision): Runs locally, calling the role [`provision`](roles/provision/).
-> 3. [`Deploy`](##Deploy): Runs against the provisioned device, calling the role [`deploy`](roles/deploy/).
+### What are the overall steps happening in background?
+1. **Build:** Run locally, calling the role [build](roles/build/).
+2. **Provision:** Run locally, calling the role [provision](roles/provision/).
+3. **Deploy:** Run against the provisioned device, calling the role [deploy](roles/deploy/).
 
-_What happens behind the scenes? What is the logical path of the topology when i run `main.yaml`?_
-> - _[`main.yaml`](main.yaml):_
->    - _[`build.yaml`](build.yaml):_
+### What happens behind the scenes when i run main.yaml?
+> - _[main.yaml](playbooks/main.yaml):_
+>    - _[build.yaml](playbooks/build.yaml):_
 >      - _roles:_
->        - _[`build`](roles/build/):_
->          - _[`download`](https://galaxy.ansible.com/victorock/download)_
->    - _[`provision.yaml`](projectprovision.yaml):_
+>        - _[build](roles/build/):_
+>          - _[download](https://galaxy.ansible.com/victorock/download)_
+>    - _[provision.yaml](playbooks/provision.yaml):_
 >      - _roles:_
->        - _[`provision`](roles/provision/):_
->          - _[`provision_ec2`](roles/provision_ec2/):_
->              - _[`inventories/group_vars/all/ec2.yaml`](inventories/group_vars/all/ec2.yaml)_
->              - _[`inventories/group_vars/tower/ec2.yaml`](inventories/group_vars/tower/ec2.yaml)_
->              - _[`inventories/group_vars/linux/ec2.yaml`](inventories/group_vars/linux/ec2.yaml)_
->              - _[`host_vars/host01-tower/ec2.yaml`](inventories/host_vars/host01-tower/ec2.yaml)_
->              - _[`host_vars/host01-linux/ec2.yaml`](inventories/host_vars/host01-linux/ec2.yaml)_
->    - _[`deploy.yaml`](roles/deploy):_
+>        - _[provision](roles/provision/):_
+>          - _[provision_ec2](roles/provision_ec2/):_
+>              - _[playbooks/group_vars/all/ec2.yaml](playbooks/group_vars/all/ec2.yaml)_
+>              - _[playbooks/group_vars/tower/ec2.yaml](playbooks/group_vars/tower/ec2.yaml)_
+>              - _[playbooks/group_vars/linux/ec2.yaml](playbooks/group_vars/linux/ec2.yaml)_
+>              - _[playbooks/host_vars/host01-tower/ec2.yaml](playbooks/host_vars/host01-tower/ec2.yaml)_
+>              - _[playbooks/host_vars/host01-linux/ec2.yaml](playbooks/host_vars/host01-linux/ec2.yaml)_
+>    - _[deploy.yaml](roles/deploy):_
 >      - _roles:_
->        - _[`deploy_tower`](roles/deploy_tower/):_ 
->          - _[`deploy_linux`](roles/deploy_linux/):_
+>        - _[deploy_tower](roles/deploy_tower/):_ 
+>          - _[deploy_linux](roles/deploy_linux/):_
 >              - _network configuration_
 >              - _baseline packages_
 >              - _repositories (redhat-rhui)_
 >              - _subscription (optional)_
->          - _[`tower_setup`](https://galaxy.ansible.com/victorock/tower_setup):_
->            - _[`inventories/group_vars/tower/ansible_tower_setup.yaml`](inventories/group_vars/tower/ansible_tower_setup.yaml)_ 
->          - _[`tower_configure`](https://galaxy.ansible.com/victorock/tower_config):_
->            - _[`inventories/group_vars/tower/ansible_tower_config.yaml`](inventories/group_vars/tower/ansible_tower_config.yaml)_ 
->          - _[`tower_facts`](https://galaxy.ansible.com/victorock/tower_facts)_
->    - _[`test.yaml`](roles/test):_
+>          - _[tower_setup](https://galaxy.ansible.com/victorock/tower_setup):_
+>            - _[playbooks/group_vars/tower/ansible_tower_setup.yaml](playbooks/group_vars/tower/ansible_tower_setup.yaml)_ 
+>          - _[tower_configure](https://galaxy.ansible.com/victorock/tower_config):_
+>            - _[playbooks/group_vars/tower/ansible_tower_config.yaml](playbooks/group_vars/tower/ansible_tower_config.yaml)_ 
+>          - _[tower_facts](https://galaxy.ansible.com/victorock/tower_facts)_
+>    - _[test.yaml](roles/test):_
 >      - _roles:_
->        - _[`test_tower`](roles/test_tower):_  
+>        - _[test_tower](roles/test_tower/):_  
 >          - _application tests_
 
 ## Additional Details
