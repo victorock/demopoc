@@ -141,7 +141,7 @@ cp <my key> files/keychain/site3
 ```
 ./playbooks/provision.yaml -i inventories/full --limit linux
 ```  
-> _NOTE: ssh-key are only generated during `build`.
+> _NOTE: ssh-key are only generated during [build](roles/build/).
 
 ### Spawn different topology
 ```
