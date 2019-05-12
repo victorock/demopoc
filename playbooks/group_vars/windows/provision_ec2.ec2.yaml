@@ -14,7 +14,7 @@ ec2_instance_user_data: |
 ec2_ami:
   name: "Windows_Server-2019-English-Full-Base*"
   architecture: "x86_64"
-  owners: "591542846629"
+  owners: "801119661308"
 
 ec2_group: "{{ ec2_vpc_name }}"
 ec2_group_rules:
