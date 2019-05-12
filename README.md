@@ -1,5 +1,5 @@
 # Summary
-Collection to provision disposable topologies.
+Content to play with disposable topologies.
 
 # Introduction
 ## Roles
