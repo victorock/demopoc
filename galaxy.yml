@@ -1,7 +1,7 @@
 ---
 namespace: "victorock"
 name: "demopoc"
-version: "v0.1"
+version: "v0.3a"
 authors: 
   - "Victor da Costa @victorobotz:twitter"
 description: "Provisioner of Demo Environments"
@@ -12,6 +12,5 @@ tags:
   - "cloud"
 dependencies:
   - "victorock.tower"
-  - "paloaltonetworks.paloaltonetworks"
   - "victorock.download"
 repository: "https://github.com/victorock/demopoc"
