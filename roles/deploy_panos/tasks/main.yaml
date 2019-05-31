@@ -4,7 +4,7 @@
   panos_admpwd:
     ip_address: "{{ ansible_provider.host }}"
     username: "{{ ansible_provider.username }}"
-    key_filename: "keychain/{{ ec2_vpc_name }}"
+    key_filename: "files/keychain/{{ ec2_vpc_name }}"
     newpassword: "{{ deploy_password }}"
   register: deploy_panos_admpwd
   until: not deploy_panos_admpwd is failed

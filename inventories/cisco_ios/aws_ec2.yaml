@@ -1,0 +1,27 @@
+plugin: aws_ec2
+hostnames:
+  - tag:Name
+  - dns-name
+  - private-ip-address
+filters:
+  tag:Environment:
+    - site1
+    - site2
+    - site3
+strict_permissions: False
+keyed_groups:
+  - prefix: arch
+    key: 'architecture'
+  - prefix: tag
+    key: tags
+  - prefix: instance_type
+    key: instance_type
+  - key: tags.Environment
+    separator: ''
+  - key: tags.Platform
+    separator: ''
+  - key: placement.region
+    separator: ''
+compose:
+  ansible_host: public_ip_address
+  ansible_network_os: tags.Platform
