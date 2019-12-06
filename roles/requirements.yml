@@ -14,3 +14,4 @@
 - name: "victorock.download"
   version: "v0.1b"
 - name: "paloaltonetworks.paloaltonetworks"
+  version: "v2.2.3"

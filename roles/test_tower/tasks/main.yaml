@@ -5,7 +5,7 @@
     method: "GET"
     body_format: "json"
     force_basic_auth: true
-    username: "admin"
-    password: "{{ deploy_password }}"
+    url_username: "admin"
+    url_password: "{{ deploy_password }}"
     status_code: 200
     validate_certs: false
