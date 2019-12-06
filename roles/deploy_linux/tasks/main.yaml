@@ -50,6 +50,16 @@
     name: "{{ linux_packages }}"
     update_cache: yes
     disable_gpg_check: true
+    state: "present"
+
+# TODO: put logic for the repository names based on the rhui-client version
+- name: "yum: Update server (except rh-amazon-rhui-client)"
+  become: true
+  yum:
+    name: "*"
+    exclude: "rh-amazon-rhui-client"
+    update_cache: yes
+    disable_gpg_check: true
     state: "latest"
 
 # TODO: Use find in templates folder and apply templates recursively in /

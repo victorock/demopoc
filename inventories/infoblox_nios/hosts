@@ -5,10 +5,6 @@ all:
     host01-nios:
     rtr01-ios:
     rtr02-ios:
-    rtr03-ios:
-    rtr04-ios:
-    rtr05-ios:
-    rtr06-ios:
   children:
     host:
       children:
