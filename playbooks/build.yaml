@@ -2,9 +2,8 @@
 ---
 - name: "Build"
   hosts: "all"
-  vars:
-    ansible_connection: "local"
-    ansible_gather_facts: true
+  connection: "local"
+  gather_facts: "false"
   roles:
     - role: "self"
       function: "build"

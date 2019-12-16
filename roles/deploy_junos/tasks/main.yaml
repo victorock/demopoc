@@ -1,0 +1,33 @@
+---
+- name: "Set admin password"
+  vars:
+    ansible_connection: network_cli
+  cli_command:
+    command: "{{ item }}"
+    prompt:
+      - "New password"
+      - "Retype new password"
+    answer:
+      - "{{deploy_password}}"
+      - "{{deploy_password}}"
+    check_all: True
+  loop:
+    - "configure"
+    - "rollback"
+    - "set system root-authentication plain-text-password"
+    - "commit"
+
+- name: "Enable netconf on port 830 (default)"
+  vars:
+    ansible_connection: network_cli
+  junos_netconf:
+
+- name: "Load junos configuration"
+  vars:
+    ansible_connection: network_cli
+  cli_config:
+    config: "{{ lookup('template', 'config.cfg.j2') }}"
+    commit: true
+
+- name: "Flush Handlers"
+  meta: flush_handlers

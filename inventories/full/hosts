@@ -9,6 +9,7 @@ all:
     fw01-panos:
     fw01-fortios:
     fw01-asa:
+    fw01-junos:
     lb01-tmos:
     rtr01-ios:
     rtr02-ios:
@@ -47,6 +48,9 @@ all:
             asa:
               hosts:
                 fw01-asa:
+            junos:
+              hosts:
+                fw01-junos:
         loadbalance:
           children:
             tmos:
@@ -74,6 +78,7 @@ all:
             fw01-panos:
             fw01-fortios:
             fw01-asa:
+            fw01-junos:
             lb01-tmos:
             rtr01-ios:
             rtr02-ios:

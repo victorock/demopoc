@@ -1,7 +1,10 @@
 ---
 - name: "Generate ssh-key"
-  become: false
   run_once: true
-  shell: "ssh-keygen -m PEM -t rsa -f files/keychain/{{ build_sshkey_name }} -N ''"
-  args:
-    creates: "files/keychain/{{ build_sshkey_name }}"
+  vars:
+    ansible_connection: local
+    ansible_become: false
+  openssh_keypair:
+    path: "files/keychain/{{ build_sshkey_name }}"
+    type: "rsa"
+    mode: 0600

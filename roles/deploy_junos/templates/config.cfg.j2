@@ -1,0 +1,14 @@
+# System
+set system host-name {{ inventory_hostname }}
+# Outside
+set interfaces ge-0/0/0 description "outside"
+set interfaces ge-0/0/0 unit 0 family inet dhcp
+set security zones security-zone outside interfaces ge-0/0/0.0
+set security zones security-zone outside interfaces ge-0/0/0.0 host-inbound-traffic system-services dhcp
+activate interfaces ge-0/0/0
+# Inside
+set interfaces ge-0/0/1 description "inside"
+set interfaces ge-0/0/1 unit 0 family inet dhcp
+set security zones security-zone inside interfaces ge-0/0/1.0
+set security zones security-zone inside interfaces ge-0/0/1.0 host-inbound-traffic system-services dhcp
+activate interfaces ge-0/0/1

@@ -38,6 +38,7 @@ The content of this repository is subdivided in the following categories:
 | `10.1.0.254` | `10.1.1.254`    | `10.1.2.254`   | `panos`    | `fw01-panos`       |  
 | `10.1.0.253` | `10.1.1.253`    | `10.1.2.253`   | `asa`      | `fw01-asa`         |  
 | `10.1.0.252` | `10.1.1.252`    | `10.1.2.252`   | `fortios`  | `fw01-fortios`     |  
+| `10.1.0.251` | `10.1.1.251`    | `10.1.2.251`   | `fortios`  | `fw01-junos`       |  
 
 #### Load Balancers
 | mgmt         | outside         | inside         | groups     | inventory_hostname |  

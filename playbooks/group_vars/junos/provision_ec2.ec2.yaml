@@ -1,0 +1,22 @@
+ec2_instance_role: "network"
+ec2_instance_type: "c4.xlarge"
+ec2_instance_volumes:
+  - device_name: /dev/sda1
+    volume_type: io1
+    iops: 1000
+    volume_size: 40
+    delete_on_termination: true
+
+ec2_ami:
+  name: "junos-vsrx3-x86-64-18.4R1.8--pm*"
+  owners: "679593333241"
+  architecture: "x86_64"
+  # BYOL
+  product_code: "4ka3ipaoo0u105imvgdsryu05"
+  
+ec2_group: "{{ ec2_vpc_name }}"
+ec2_group_rules:
+  - proto: -1
+    from_port: -1
+    to_port: -1
+    cidr_ip: 0.0.0.0/0

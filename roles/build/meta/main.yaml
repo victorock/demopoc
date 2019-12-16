@@ -3,7 +3,7 @@ dependencies:
 # TODO: Fix "victorock.download" to support Darwin.
   - role: "victorock.download"
     autorun: true
-    when: ansible_system == "Linux"
+    when: (ansible_system | default("Unknown")) == "Linux"
 
 galaxy_info:
   role_name: build
